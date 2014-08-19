@@ -12,8 +12,9 @@ from project.models.events import Events
 
 @app.endpoint('event.rss')
 def rss():
-    feed = AtomFeed('Recent Articles',
-                    feed_url=request.url, url=request.url_root)
+    feed = AtomFeed('Recent Events', feed_url=request.url, url=request.url_root)
+    # TODO
+    # query end_datetime > today
     articles = Events.query.filter(Events.start_datetime > datetime.datetime.now()).order_by(Events.start_datetime).all()
     for article in articles:
         feed.add(article.name, unicode(article.name),
