@@ -5,4 +5,5 @@ from werkzeug.routing import Rule
 
 urlpatterns = {
     Rule('/', endpoint='index'),
+    Rule('/event/rss', endpoint='event.rss'),
 }
