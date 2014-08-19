@@ -37,8 +37,12 @@ app.permanent_session_lifetime = timedelta(seconds=60*60*10)  # session expire t
 #### initial database ####
 ## Remote database config
 import ConfigParser
+import os
 from os.path import expanduser
-config_file = expanduser("~") + '/.opensourcefeeds.cfg'
+if 'OPENSHIFT_DATA_DIR' in os.environ:
+    config_file = os.environ['OPENSHIFT_DATA_DIR'] + '/.opensourcefeeds.cfg'
+else:
+    config_file = expanduser("~") + '/.opensourcefeeds.cfg'
 config = ConfigParser.SafeConfigParser()
 config.read(config_file)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://%s:%s@%s/%s' % (config.get('DATABASE', 'username'), config.get('DATABASE', 'password'), config.get('DATABASE', 'host'), config.get('DATABASE', 'database'))
