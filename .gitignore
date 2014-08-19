@@ -1,4 +1,15 @@
-venv/
+*.bak
+*.diff
+*.lock
+*.log
+*.orig
 *.pyc
 *.pyo
+*.rej
+*.swp
+*_
 *~
+env/
+virtenv/
+tmp/
+
