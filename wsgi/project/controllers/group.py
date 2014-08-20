@@ -9,6 +9,8 @@ from project.models.groups import Groups
 from project.models.group_types import GroupTypes
 
 
-@app.endpoint('index')
-def index():
-    return render_template('index.html')
+@app.endpoint('group.all_html')
+def all_html():
+    groups = db.session.query(Groups, GroupTypes).filter(Groups.type == GroupTypes.id).order_by(Groups.type, Groups.name).all()
+
+    return render_template('group/list_table.html', groups=groups)
