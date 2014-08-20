@@ -13,4 +13,4 @@ from project.models.group_types import GroupTypes
 def all_html():
     groups = db.session.query(Groups, GroupTypes).filter(Groups.type == GroupTypes.id).order_by(Groups.type, Groups.name).all()
 
-    return render_template('group/list_table.html', groups=groups)
+    return render_template('group/list.html', groups=groups)

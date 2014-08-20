@@ -1,0 +1,22 @@
+{% extends "layout/layout.html" %}
+
+{% block head_css %}
+{% endblock %}
+
+{% block head_js %}
+{% endblock %}
+
+{% block body_content %}
+    <table>
+    {% for group in groups %}
+    <tr>
+        <td>{{ group.Groups.name }}</td>
+        <td>{{ group.Groups.alias_name }}</td>
+        <td>{{ group.Groups.short_name }}</td>
+    </tr>
+    {% endfor %}
+    </table>
+{% endblock %}
+
+{% block body_js %}
+{% endblock %}
