@@ -7,6 +7,7 @@ from werkzeug.contrib.atom import AtomFeed
 import datetime
 
 from project.models.models import db
+from project.models.groups import Groups
 from project.models.events import Events
 
 
@@ -15,10 +16,10 @@ def rss():
     feed = AtomFeed('Recent Events', feed_url=request.url, url=request.url_root)
     # TODO
     # query end_datetime > today
-    articles = Events.query.filter(Events.start_datetime > datetime.datetime.now()).order_by(Events.start_datetime).all()
+    articles = db.session.query(Groups, Events).filter(Groups.id == Events.group_id, Events.start_datetime > datetime.datetime.now()).order_by(Events.start_datetime).all()
     for article in articles:
-        feed.add(article.name, unicode(article.name),
+        feed.add('%s [%s] %s' % (article.Events.start_datetime.strftime("%m/%d"), article.Groups.name, article.Events.name), unicode(article.Events.name),
                  content_type='html',
-                 url=article.url,
-                 updated=article.start_datetime)
+                 url=article.Events.url,
+                 updated=article.Events.start_datetime)
     return feed.get_response()
