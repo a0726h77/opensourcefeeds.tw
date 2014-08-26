@@ -30,7 +30,7 @@ def page(group_id):
 
     recent_events = Events.query.filter(Events.group_id == group_id, Events.start_datetime > datetime.datetime.now()).order_by(Events.start_datetime).all()
 
-    past_events = Events.query.filter(Events.group_id == group_id, Events.start_datetime < datetime.datetime.now()).order_by(Events.start_datetime.desc()).limit(8)
+    past_events = Events.query.filter(Events.group_id == group_id, db.or_(Events.start_datetime < datetime.datetime.now(), Events.start_datetime == None)).order_by(Events.start_datetime.desc()).limit(8)
 
     return render_template('group/page.html', group=group, group_websites_no_icon=group_websites_no_icon, group_websites_has_icon=group_websites_has_icon, recent_events=recent_events, past_events=past_events)
 
