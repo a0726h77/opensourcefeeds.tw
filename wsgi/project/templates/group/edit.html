@@ -10,7 +10,7 @@
 <div class="row">
     <div class="col-md-8">
 
-    <button type="button" class="btn btn-primary" onclick="location.href='{{ url_for('group.page', group_id=group.id) }}'">回瀏覽頁面</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='{{ url_for('group.page', group_id=group.id) }}'">返回瀏覽頁面</button>
 
     <h2>社群名稱</h2>
     <div class="bs-example">
@@ -46,6 +46,52 @@
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
                     <button type="submit" class="btn btn-default">儲存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <h2>網站連結</h2>
+    <div class="bs-example">
+        <table class="table">
+            {% for website in group_websites_no_icon %}
+            <tr>
+                <td>{{ website.name }}</td>
+                <td><a href="{{ website.url }}" target="_blank">{{ website.url }}</a></td>
+            </tr>
+            {% endfor %}
+            {% for website in group_websites_has_icon %}
+            <tr>
+                <td><img src="{{ url_for('static', filename='images/32x32/%s.png' % website.name.lower().replace(' ', '')) }}" alt="{{ website.name }}"></td>
+                <td><a href="{{ website.url }}" target="_blank">{{ website.url }}</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+        <hr>
+        <form class="form-horizontal" role="form" method="POST">
+            <div class="form-group">
+                <label for="inputName" class="col-sm-2 control-label">選擇網站形態或自定名稱</label>
+                <div class="col-sm-5">
+                    <select class="form-control" name="name">
+                        <option></option>
+                        {% for site in support_sites %}
+                        <option value="{{ site }}">{{ site }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-sm-5">
+                    <input type="text" class="form-control" id="inputCustomName" name="custom_name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputURL" class="col-sm-2 control-label">網址</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputURL" name="url" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">新增</button>
                 </div>
             </div>
         </form>

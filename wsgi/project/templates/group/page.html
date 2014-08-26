@@ -26,7 +26,7 @@
             {% endfor %}
             <br>
             {% for group_website in group_websites_has_icon %}
-                <a href="{{ group_website.url }}" target="_blank"><img src="{{ url_for('static', filename='images/32x32/%s.png' % group_website.name.lower()) }}" alt="{{ group_website.name }}"></a>
+                <a href="{{ group_website.url }}" target="_blank"><img src="{{ url_for('static', filename='images/32x32/%s.png' % group_website.name.lower().replace(' ', '')) }}" alt="{{ group_website.name }}"></a>
             {% endfor %}
         </div>
     </div>
