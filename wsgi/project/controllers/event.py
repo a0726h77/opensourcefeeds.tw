@@ -21,5 +21,5 @@ def rss():
         feed.add('%s [%s] %s' % (article.Events.start_datetime.strftime("%m/%d"), article.Groups.name, article.Events.name), unicode(article.Events.name),
                  content_type='html',
                  url=article.Events.url,
-                 updated=article.Events.start_datetime)
+                 updated=article.Events.start_datetime - datetime.timedelta(hours=8))
     return feed.get_response()
