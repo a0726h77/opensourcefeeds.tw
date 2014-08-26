@@ -30,6 +30,27 @@
 </section>
 
 <section id="gk-mainbody">
+    <div class="row">
+        <div class="col-md-4">
+            <h3>近期活動</h3>
+            <ul>
+                {% for event in recent_events %}
+                <li><a href="{{ event.url }}" target="_blank">{{ event.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <h3>過往活動</h3>
+            <ul>
+                {% for event in past_events %}
+                <li><a href="{{ event.url }}" target="_blank">{{ event.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <h3>標籤雲</h3>
+        </div>
+    </div>
 </section>
 {% endblock %}
 
