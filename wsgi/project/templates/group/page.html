@@ -17,6 +17,9 @@
             {% endif %}
         </div>
         <div class="col-md-6" style="text-align:right;">
+            <a href="{{ url_for('group.edit', group_id=group.Groups.id) }}">編輯頁面</a>
+            <br>
+            <br>
             {% for group_website in group_websites_no_icon %}
                 {% if loop.index > 1 %} | {%endif%}
                 <a href="{{ group_website.url }}" target="_blank"><b>{{ group_website.name }}</b></a>

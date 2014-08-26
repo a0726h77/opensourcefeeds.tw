@@ -33,6 +33,30 @@ def page(group_id):
     return render_template('group/page.html', group=group, group_websites_no_icon=group_websites_no_icon, group_websites_has_icon=group_websites_has_icon, recent_events=recent_events, past_events=past_events)
 
 
+@app.endpoint('group.add')
+def add():
+    group = db.session.execute(Groups.__table__.insert({'name': '_'}))
+    db.session.commit()
+
+    return redirect(url_for('group.edit', group_id=group.lastrowid))
+
+
+@app.endpoint('group.edit')
+def edit(group_id):
+    if request.method == 'POST':
+        if 'name' in request.form:
+            rows_changed = Groups.query.filter(Groups.id == group_id).update(request.form)
+            db.session.commit()
+
+        return redirect(url_for('group.page', group_id=group_id))
+    else:
+        group = Groups.query.filter(Groups.id == group_id).one()
+
+        group_types = GroupTypes.query.all()
+
+        return render_template('group/edit.html', group=group, group_types=group_types)
+
+
 @app.endpoint('group.all_html')
 def all_html():
     groups = db.session.query(Groups, GroupTypes).filter(Groups.type == GroupTypes.id).order_by(Groups.type, Groups.name).all()

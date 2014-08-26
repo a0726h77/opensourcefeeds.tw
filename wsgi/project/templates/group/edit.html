@@ -1,0 +1,59 @@
+{% extends "layout/layout.html" %}
+
+{% block head_css %}
+{% endblock %}
+
+{% block head_js %}
+{% endblock %}
+
+{% block body_content %}
+<div class="row">
+    <div class="col-md-8">
+
+    <button type="button" class="btn btn-primary" onclick="location.href='{{ url_for('group.page', group_id=group.id) }}'">回瀏覽頁面</button>
+
+    <h2>社群名稱</h2>
+    <div class="bs-example">
+        <form class="form-horizontal" role="form" method="POST">
+            <div class="form-group">
+                <label for="inputName" class="col-sm-2 control-label">社群名稱</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputName" name="name" placeholder="ex: Linux 使用者群組" {% if group.name and group.name != '_' %}value="{{ group.name }}{% endif %}" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputAliasName" class="col-sm-2 control-label">社群別名</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputAliasName" name="alias_name" placeholder="ex: Linux User Group" {% if group.alias_name %}value="{{ group.alias_name }}{% endif %}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputShortName" class="col-sm-2 control-label">社群短名稱</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputShortName" name="short_name" placeholder="ex: LUG" {% if group.short_name %}value="{{ group.short_name }}{% endif %}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputType" class="col-sm-2 control-label">群組形態</label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="type" required>
+                        {% for group_type in group_types %}
+                        <option value="{{ group_type.id }}" {% if group.type == group_type.id %}selected{% endif %}>{{ group_type.type }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">儲存</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block body_js %}
+{% endblock %}
