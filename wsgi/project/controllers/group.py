@@ -6,18 +6,23 @@ from flask import Flask, request, session, url_for, redirect, \
 import datetime
 import os
 import glob
+import re
 
 from project.models.models import db
 from project.models.groups import Groups
 from project.models.group_types import GroupTypes
 from project.models.group_websites import GroupWebsites
 from project.models.events import Events
+from project.models.group_facebook_id import GroupFacebookID
 
 
 @app.endpoint('group.page')
 def page(group_id):
+    ## group info ##
     group = db.session.query(Groups, GroupTypes).filter(Groups.type == GroupTypes.id, Groups.id == group_id).one()
+    ## group info ##
 
+    ## recent and past events ##
     icon_list = list_icon_name()
     group_websites = GroupWebsites.query.filter(GroupWebsites.group_id == group_id).all()
     group_websites_has_icon = []
@@ -31,8 +36,29 @@ def page(group_id):
     recent_events = Events.query.filter(Events.group_id == group_id, Events.start_datetime > datetime.datetime.now()).order_by(Events.start_datetime).all()
 
     past_events = Events.query.filter(Events.group_id == group_id, db.or_(Events.start_datetime < datetime.datetime.now(), Events.start_datetime == None)).order_by(Events.start_datetime.desc()).limit(8)
+    ## recent and past events ##
 
-    return render_template('group/page.html', group=group, group_websites_no_icon=group_websites_no_icon, group_websites_has_icon=group_websites_has_icon, recent_events=recent_events, past_events=past_events)
+    ## rss feed link ##
+    feeds = []
+    for group_website in group_websites:
+        if group_website.name == 'Facebook':
+            m = re.match('https://www.facebook.com/groups/(.*)/', group_website.url)
+            if m:
+                if m and re.search('([a-zA-Z\.]+)', m.groups()[0]):
+                    facebook_id = GroupFacebookID.query.filter(GroupFacebookID.group_urlname == m.groups()[0]).first()
+                else:
+                    facebook_id = m.groups()[0]
+
+                if facebook_id:
+                    feeds.append({'title': 'Facebook', 'url': 'http://www.wallflux.com/atom/%s' % facebook_id.facebook_id})
+        elif group_website.name == 'Google Groups':
+            m = re.search('#!forum\/(.*)', group_website.url)
+            print group_website.url
+            if m:
+                feeds.append({'title': 'Google Groups', 'url': 'https://groups.google.com/group/%s/feed/rss_v2_0_msgs.xml' % m.groups()[0]})
+    ## rss feed link ##
+
+    return render_template('group/page.html', group=group, group_websites_no_icon=group_websites_no_icon, group_websites_has_icon=group_websites_has_icon, recent_events=recent_events, past_events=past_events, feeds=feeds)
 
 
 @app.endpoint('group.add')
@@ -102,5 +128,3 @@ def list_files(path, file_filter='*'):
     files = glob.glob(file_filter)
     files.sort()
     return files
-
-

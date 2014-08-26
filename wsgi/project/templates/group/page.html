@@ -1,6 +1,7 @@
 {% extends "layout/layout.html" %}
 
 {% block head_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='FeedEk/css/FeedEk.css') }}">
 {% endblock %}
 
 {% block head_js %}
@@ -54,8 +55,46 @@
             <h3>標籤雲</h3>
         </div>
     </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-md-4">
+            <h3>...</h3>
+        </div>
+        <div class="col-md-4">
+            <h3>動態</h3>
+            {% if feeds %}
+                <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+                    {% for feed in feeds %}
+                    <li {% if loop.index == 1 %}class="active"{%endif%}><a href="#{{ feed.title.replace(' ', '') }}" data-toggle="tab">{{ feed.title }}</a></li>
+                    {% endfor %}
+                </ul>
+                <div id="my-tab-content" class="tab-content">
+                    {% for feed in feeds %}
+                    <div class="tab-pane {% if loop.index == 1 %}active{%endif%}" id="{{ feed.title.replace(' ', '') }}">
+                        <div id="divRss{{ feed.title.replace(' ', '') }}"></div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <h3>...</h3>
+        </div>
+    </div>
 </section>
 {% endblock %}
 
 {% block body_js %}
+<script src="{{ url_for('static', filename='FeedEk/js/FeedEk.min.js') }}"></script>
+
+<script>
+    {% for feed in feeds %}
+    $('#divRss{{ feed.title.replace(' ', '') }}').FeedEk({
+        FeedUrl: '{{ feed.url }}',
+        MaxCount : 5
+    });
+    {% endfor %}
+</script>
 {% endblock %}
