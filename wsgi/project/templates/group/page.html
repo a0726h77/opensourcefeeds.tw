@@ -93,7 +93,9 @@
     {% for feed in feeds %}
     $('#divRss{{ feed.title.replace(' ', '') }}').FeedEk({
         FeedUrl: '{{ feed.url }}',
-        MaxCount : 5
+        MaxCount : 5,
+        ShowDesc: true,
+        DescCharacterLimit: 100
     });
     {% endfor %}
 </script>
