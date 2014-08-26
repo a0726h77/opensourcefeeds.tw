@@ -10,7 +10,7 @@
     <table>
     {% for group in groups %}
     <tr>
-        <td>{{ group.Groups.name }}</td>
+        <td><a href="{{ group.Groups.id }}">{{ group.Groups.name }}</a></td>
         <td>{{ group.Groups.alias_name }}</td>
         <td>{{ group.Groups.short_name }}</td>
     </tr>
