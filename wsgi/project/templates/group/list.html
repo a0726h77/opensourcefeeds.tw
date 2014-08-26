@@ -11,8 +11,8 @@
     {% for group in groups %}
     <tr>
         <td><a href="{{ group.Groups.id }}">{{ group.Groups.name }}</a></td>
-        <td>{{ group.Groups.alias_name }}</td>
-        <td>{{ group.Groups.short_name }}</td>
+        <td>{% if group.Groups.alias_name %}{{ group.Groups.alias_name }}{% else %}-{% endif %}</td>
+        <td>{% if group.Groups.alias_name %}{{ group.Groups.short_name }}{% else %}-{% endif %}</td>
     </tr>
     {% endfor %}
     </table>
