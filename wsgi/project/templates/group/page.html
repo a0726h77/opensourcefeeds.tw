@@ -1,0 +1,36 @@
+{% extends "layout/layout.html" %}
+
+{% block head_css %}
+{% endblock %}
+
+{% block head_js %}
+{% endblock %}
+
+{% block body_content %}
+
+<section id="gk-header">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>{{ group.Groups.name }} {% if group.Groups.short_name %}({{ group.Groups.short_name }}){% endif %}</h2>
+            {% if group.Groups.alias_name %}
+            <h3>{{ group.Groups.alias_name }}</h3>
+            {% endif %}
+        </div>
+        <div class="col-md-6" style="text-align:right;">
+            {% for group_website in group_websites_no_icon %}
+                <span><a href="{{ group_website.url }}" target="_blank">[{{ group_website.name }}]</a></span>
+            {% endfor %}
+            <br>
+            {% for group_website in group_websites_has_icon %}
+                <a href="{{ group_website.url }}" target="_blank"><img src="{{ url_for('static', filename='images/32x32/%s.png' % group_website.name.lower()) }}" alt="{{ group_website.name }}"></a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section id="gk-mainbody">
+</section>
+{% endblock %}
+
+{% block body_js %}
+{% endblock %}
