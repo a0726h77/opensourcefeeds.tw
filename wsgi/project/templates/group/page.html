@@ -18,7 +18,8 @@
         </div>
         <div class="col-md-6" style="text-align:right;">
             {% for group_website in group_websites_no_icon %}
-                <span><a href="{{ group_website.url }}" target="_blank">[{{ group_website.name }}]</a></span>
+                {% if loop.index > 1 %} | {%endif%}
+                <a href="{{ group_website.url }}" target="_blank"><b>{{ group_website.name }}</b></a>
             {% endfor %}
             <br>
             {% for group_website in group_websites_has_icon %}
