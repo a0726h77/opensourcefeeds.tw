@@ -72,7 +72,7 @@ def add():
 
 @app.endpoint('group.edit')
 def edit(group_id):
-    support_sites = ['Accupass', 'Blogger', 'Facebook', 'Flickr', 'GitHub', 'Google+', 'Google Groups', 'Hackpad', 'KKTIX', 'Meetup', 'Plurk', 'Twitter', 'Ustream', 'Wikidot', 'YouTube']
+    support_sites = ['Accupass', 'Blogger', 'Facebook', 'Flickr', 'GitHub', 'Google+', 'Google Groups', 'Hackpad', 'KKTIX', 'Meetup', 'Plurk', 'Twitter', 'Ustream', 'Wikidot', 'YouTube', 'Peatix']
     icon_list = list_icon_name()
 
     if request.method == 'POST':
