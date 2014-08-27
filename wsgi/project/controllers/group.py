@@ -42,21 +42,15 @@ def page(group_id):
     feeds = []
     for group_website in group_websites:
         if group_website.name == 'Facebook':
-            m = re.match('https://www.facebook.com/groups/(.*)/', group_website.url)
-            if m:
-                if m and re.search('([a-zA-Z\.]+)', m.groups()[0]):
-                    facebook_id = GroupFacebookID.query.filter(GroupFacebookID.group_urlname == m.groups()[0]).first()
-                    facebook_id = facebook_id.facebook_id
-                else:
-                    facebook_id = m.groups()[0]
+            facebook_id = get_facebook_id(group_website.url)
 
-                if facebook_id:
-                    feeds.append({'title': 'Facebook', 'url': 'http://www.wallflux.com/atom/%s' % facebook_id})
+            if facebook_id:
+                feeds.append({'title': 'Facebook', 'url': 'http://www.wallflux.com/atom/%s' % facebook_id})
         elif group_website.name == 'Google Groups':
-            m = re.search('#!forum\/(.*)', group_website.url)
-            print group_website.url
-            if m:
-                feeds.append({'title': 'Google Groups', 'url': 'https://groups.google.com/group/%s/feed/rss_v2_0_msgs.xml' % m.groups()[0]})
+            google_groups_url_name = get_google_groups_url_name(group_website.url)
+
+            if google_groups_url_name:
+                feeds.append({'title': 'Google Groups', 'url': 'https://groups.google.com/group/%s/feed/rss_v2_0_msgs.xml' % google_groups_url_name})
     ## rss feed link ##
 
     return render_template('group/page.html', group=group, group_websites_no_icon=group_websites_no_icon, group_websites_has_icon=group_websites_has_icon, recent_events=recent_events, past_events=past_events, feeds=feeds)
@@ -129,3 +123,26 @@ def list_files(path, file_filter='*'):
     files = glob.glob(file_filter)
     files.sort()
     return files
+
+
+def get_facebook_id(url):
+    m = re.match('https://www.facebook.com/groups/(.*)/', url)
+
+    if not m:
+        m = re.search('https://www.facebook.com/([\w\.]+)[/]?', url)
+
+    if m:
+        if m and re.search('([a-zA-Z\.]+)', m.groups()[0]):
+            facebook_id = GroupFacebookID.query.filter(GroupFacebookID.group_urlname == m.groups()[0]).first()
+            facebook_id = facebook_id.facebook_id
+        else:
+            facebook_id = m.groups()[0]
+
+    return facebook_id
+
+
+def get_google_groups_url_name(url):
+    m = re.search('#!forum\/(.*)', url)
+
+    if m:
+        return m.groups()[0]
