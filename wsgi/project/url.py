@@ -10,4 +10,5 @@ urlpatterns = {
     Rule('/group/edit/<group_id>', endpoint='group.edit'),
     Rule('/group/html', endpoint='group.all_html'),
     Rule('/event/rss', endpoint='event.rss'),
+    Rule('/robots.txt', endpoint='robots.txt'),
 }
