@@ -46,11 +46,12 @@ def page(group_id):
             if m:
                 if m and re.search('([a-zA-Z\.]+)', m.groups()[0]):
                     facebook_id = GroupFacebookID.query.filter(GroupFacebookID.group_urlname == m.groups()[0]).first()
+                    facebook_id = facebook_id.facebook_id
                 else:
                     facebook_id = m.groups()[0]
 
                 if facebook_id:
-                    feeds.append({'title': 'Facebook', 'url': 'http://www.wallflux.com/atom/%s' % facebook_id.facebook_id})
+                    feeds.append({'title': 'Facebook', 'url': 'http://www.wallflux.com/atom/%s' % facebook_id})
         elif group_website.name == 'Google Groups':
             m = re.search('#!forum\/(.*)', group_website.url)
             print group_website.url
