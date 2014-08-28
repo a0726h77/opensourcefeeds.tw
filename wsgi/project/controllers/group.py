@@ -132,6 +132,7 @@ def get_facebook_id(url):
     if not m:
         m = re.search('https://www.facebook.com/([\w\.]+)[/]?', url)
 
+    facebook_id = None
     if m:
         if m and re.search('([a-zA-Z\.]+)', m.groups()[0]):
             facebook_id = GroupFacebookID.query.filter(GroupFacebookID.group_urlname == m.groups()[0]).first()
