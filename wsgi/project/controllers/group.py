@@ -65,6 +65,8 @@ def page(group_id):
                 feeds.append({'title': 'Google Groups', 'url': 'https://groups.google.com/group/%s/feed/rss_v2_0_msgs.xml' % google_groups_url_name})
         elif group_website.name == 'Tumblr':
             feeds.append({'title': 'Tumblr', 'url': '%s/rss' % group_website.url})
+        elif group_website.name == 'Plurk':
+            feeds.append({'title': 'Plurk', 'url': '%s.xml' % group_website.url})
         elif group_website.name == 'Twitter':
             username = get_twitter_username(group_website.url)
 
