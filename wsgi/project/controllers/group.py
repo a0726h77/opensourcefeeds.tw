@@ -77,6 +77,11 @@ def page(group_id):
 
             if slideshare_username:
                 feeds.append({'title': 'SlideShare', 'url': 'http://www.slideshare.net/rss/user/%s' % slideshare_username})
+        elif group_website.name == 'YouTube':
+            youtube_username = get_youtube_username(group_website.url)
+
+            if youtube_username:
+                feeds.append({'title': 'YouTube', 'url': 'https://gdata.youtube.com/feeds/api/users/%s/uploads' % youtube_username})
     ## rss feed link ##
 
     return render_template('group/page.html', group=group, group_websites_no_icon=group_websites_no_icon, group_websites_has_icon=group_websites_has_icon, recent_events=recent_events, past_events=past_events, feeds=feeds, repos=repos)
@@ -207,3 +212,10 @@ def get_slideshare_username(url):
 
     if m:
         return m.groups()[0]
+
+
+def get_youtube_username(url):
+    m = re.search('http[s]?://www.youtube.com/(user|channel)/([\w\.]+)[/]?', url)
+
+    if m:
+        return m.groups()[1]
