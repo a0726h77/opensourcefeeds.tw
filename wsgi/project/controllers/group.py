@@ -51,6 +51,8 @@ def page(group_id):
 
             if google_groups_url_name:
                 feeds.append({'title': 'Google Groups', 'url': 'https://groups.google.com/group/%s/feed/rss_v2_0_msgs.xml' % google_groups_url_name})
+        elif group_website.name == 'Tumblr':
+            feeds.append({'title': 'Tumblr', 'url': '%s/rss' % group_website.url})
     ## rss feed link ##
 
     return render_template('group/page.html', group=group, group_websites_no_icon=group_websites_no_icon, group_websites_has_icon=group_websites_has_icon, recent_events=recent_events, past_events=past_events, feeds=feeds)
