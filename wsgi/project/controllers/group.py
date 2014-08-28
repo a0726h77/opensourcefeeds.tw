@@ -70,6 +70,8 @@ def page(group_id):
 
             if username:
                 feeds.append({'title': 'Twitter', 'url': 'http://www.rssitfor.me/getrss?name=%s' % username})
+        elif group_website.name == 'Blogger':
+            feeds.append({'title': 'Blogger', 'url': '%s/feeds/posts/default' % group_website.url})
     ## rss feed link ##
 
     return render_template('group/page.html', group=group, group_websites_no_icon=group_websites_no_icon, group_websites_has_icon=group_websites_has_icon, recent_events=recent_events, past_events=past_events, feeds=feeds, repos=repos)
