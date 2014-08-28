@@ -7,6 +7,8 @@ import datetime
 import os
 import glob
 import re
+import urllib2
+import json
 
 from project.models.models import db
 from project.models.groups import Groups
@@ -38,6 +40,16 @@ def page(group_id):
     past_events = Events.query.filter(Events.group_id == group_id, db.or_(Events.start_datetime < datetime.datetime.now(), Events.start_datetime == None)).order_by(Events.start_datetime.desc()).limit(8)
     ## recent and past events ##
 
+
+    ## Github repo ##
+    repos = []
+    for group_website in group_websites:
+        if group_website.name == 'GitHub':
+            username = get_github_username(group_website.url)
+            if username:
+                repos = get_github_repos(username)
+    ## Github repo ##
+
     ## rss feed link ##
     feeds = []
     for group_website in group_websites:
@@ -60,7 +72,7 @@ def page(group_id):
                 feeds.append({'title': 'Twitter', 'url': 'http://www.rssitfor.me/getrss?name=%s' % username})
     ## rss feed link ##
 
-    return render_template('group/page.html', group=group, group_websites_no_icon=group_websites_no_icon, group_websites_has_icon=group_websites_has_icon, recent_events=recent_events, past_events=past_events, feeds=feeds)
+    return render_template('group/page.html', group=group, group_websites_no_icon=group_websites_no_icon, group_websites_has_icon=group_websites_has_icon, recent_events=recent_events, past_events=past_events, feeds=feeds, repos=repos)
 
 
 @app.endpoint('group.add')
@@ -163,3 +175,21 @@ def get_twitter_username(url):
 
     if m:
         return m.groups()[0]
+
+
+def get_github_username(url):
+    m = re.match('https://github.com/orgs/([\w-]+)[/]?', url)
+    if m:
+        return m.groups()[0]
+
+    m = re.search('https://github.com/([\w\.]+)[/]?', url)
+    if m:
+        return m.groups()[0]
+
+def get_github_repos(username):
+    url = 'https://api.github.com/users/%s/repos' % username
+
+    connection = urllib2.urlopen(url)
+    response = connection.read()
+
+    return json.loads(response)
