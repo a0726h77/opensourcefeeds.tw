@@ -72,13 +72,13 @@
             {% if feeds %}
                 <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
                     {% for feed in feeds %}
-                    <li {% if loop.index == 1 %}class="active"{%endif%}><a href="#{{ feed.title.replace(' ', '') }}" data-toggle="tab">{{ feed.title }}</a></li>
+                    <li {% if loop.index == 1 %}class="active"{%endif%}><a href="#{{ feed.title.replace(' ', '').replace('+', 'Plus') }}" data-toggle="tab">{{ feed.title }}</a></li>
                     {% endfor %}
                 </ul>
                 <div id="my-tab-content" class="tab-content">
                     {% for feed in feeds %}
-                    <div class="tab-pane {% if loop.index == 1 %}active{%endif%}" id="{{ feed.title.replace(' ', '') }}">
-                        <div id="divRss{{ feed.title.replace(' ', '') }}"></div>
+                    <div class="tab-pane {% if loop.index == 1 %}active{%endif%}" id="{{ feed.title.replace(' ', '').replace('+', 'Plus') }}">
+                        <div id="divRss{{ feed.title.replace(' ', '').replace('+', 'Plus') }}"></div>
                     </div>
                     {% endfor %}
                 </div>
@@ -96,7 +96,7 @@
 
 <script>
     {% for feed in feeds %}
-    $('#divRss{{ feed.title.replace(' ', '') }}').FeedEk({
+    $('#divRss{{ feed.title.replace(' ', '').replace('+', 'Plus') }}').FeedEk({
         FeedUrl: '{{ feed.url }}',
         MaxCount : 5,
         ShowDesc: true,
