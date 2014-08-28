@@ -69,6 +69,11 @@ def page(group_id):
             feeds.append({'title': 'Plurk', 'url': '%s.xml' % group_website.url})
         elif group_website.name == 'Wikidot':
             feeds.append({'title': 'Wikidot', 'url': '%s/feed/site-changes.xml' % group_website.url})
+        elif group_website.name == 'Google+':
+            google_plus_id = get_google_plus_id(group_website.url)
+
+            if google_plus_id:
+                feeds.append({'title': 'Google+', 'url': 'https://gplus-to-rss.appspot.com/rss/%s' % google_plus_id})
         elif group_website.name == 'Twitter':
             username = get_twitter_username(group_website.url)
 
@@ -222,4 +227,13 @@ def get_youtube_username(url):
     m = re.search('http[s]?://www.youtube.com/(user|channel)/([\w\.]+)[/]?', url)
 
     if m:
+        return m.groups()[1]
+
+
+def get_google_plus_id(url):
+    # m = re.search('https://plus.google.com/(u/0/)?(communities/)?(\d+)', url)
+    m = re.search('https://plus.google.com/(u/0/)?(\d+)', url)
+
+    if m:
+        # return m.groups()[2]
         return m.groups()[1]
