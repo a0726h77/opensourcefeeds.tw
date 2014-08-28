@@ -24,7 +24,7 @@ def page(group_id):
     try:
         group = db.session.query(Groups, GroupTypes).filter(Groups.type == GroupTypes.id, Groups.id == group_id).one()
     except:
-        return redirect(url_for('group.all_html'))
+        return redirect(url_for('group.edit', group_id=group_id))
     ## group info ##
 
     ## recent and past events ##
