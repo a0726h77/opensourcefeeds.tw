@@ -72,6 +72,11 @@ def page(group_id):
                 feeds.append({'title': 'Twitter', 'url': 'http://www.rssitfor.me/getrss?name=%s' % username})
         elif group_website.name == 'Blogger':
             feeds.append({'title': 'Blogger', 'url': '%s/feeds/posts/default' % group_website.url})
+        elif group_website.name == 'SlideShare':
+            slideshare_username = get_slideshare_username(group_website.url)
+
+            if slideshare_username:
+                feeds.append({'title': 'SlideShare', 'url': 'http://www.slideshare.net/rss/user/%s' % slideshare_username})
     ## rss feed link ##
 
     return render_template('group/page.html', group=group, group_websites_no_icon=group_websites_no_icon, group_websites_has_icon=group_websites_has_icon, recent_events=recent_events, past_events=past_events, feeds=feeds, repos=repos)
@@ -195,3 +200,10 @@ def get_github_repos(username):
     response = connection.read()
 
     return json.loads(response)
+
+
+def get_slideshare_username(url):
+    m = re.search('http://www.slideshare.net/([\w\.]+)[/]?', url)
+
+    if m:
+        return m.groups()[0]
