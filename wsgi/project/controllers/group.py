@@ -21,7 +21,10 @@ from project.models.group_facebook_id import GroupFacebookID
 @app.endpoint('group.page')
 def page(group_id):
     ## group info ##
-    group = db.session.query(Groups, GroupTypes).filter(Groups.type == GroupTypes.id, Groups.id == group_id).one()
+    try:
+        group = db.session.query(Groups, GroupTypes).filter(Groups.type == GroupTypes.id, Groups.id == group_id).one()
+    except:
+        return redirect(url_for('group.all_html'))
     ## group info ##
 
     ## recent and past events ##
