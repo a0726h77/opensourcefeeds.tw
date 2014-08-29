@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from project.models.models import db
+from app.models.models import db
 
 class Events(db.Model):
     __tablename__ = 'events'

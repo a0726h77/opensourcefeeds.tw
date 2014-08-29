@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from project import app
+from app import app
 from flask import Flask, request, session, url_for, redirect, \
      render_template, abort, g, flash, _app_ctx_stack
 import datetime
@@ -10,12 +10,12 @@ import re
 import urllib2
 import json
 
-from project.models.models import db
-from project.models.groups import Groups
-from project.models.group_types import GroupTypes
-from project.models.group_websites import GroupWebsites
-from project.models.events import Events
-from project.models.group_facebook_id import GroupFacebookID
+from app.models.models import db
+from app.models.groups import Groups
+from app.models.group_types import GroupTypes
+from app.models.group_websites import GroupWebsites
+from app.models.events import Events
+from app.models.group_facebook_id import GroupFacebookID
 
 
 @app.endpoint('group.page')

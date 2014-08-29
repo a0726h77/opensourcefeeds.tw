@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 __version__ = '0.1'
 from flask import Flask
-app = Flask('project')
+app = Flask('app')
 app.debug = True
 
 # import controllers
-from project.controllers import *
+from app.controllers import *
 
 # import model
 from models.models import db
