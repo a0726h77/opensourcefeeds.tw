@@ -15,6 +15,12 @@ def index():
     return redirect(url_for('group.all_html'))
 
 
+@app.endpoint('logout')
+def logout():
+    session.clear()
+    return redirect(url_for('index'))
+
+
 @app.endpoint('robots.txt')
 def serve_robots():
     return send_from_directory(app.static_folder, request.path[1:])

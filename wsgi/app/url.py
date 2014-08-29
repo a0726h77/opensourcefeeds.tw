@@ -11,4 +11,7 @@ urlpatterns = {
     Rule('/group/html', endpoint='group.all_html'),
     Rule('/event/rss', endpoint='event.rss'),
     Rule('/robots.txt', endpoint='robots.txt'),
+    Rule('/google/login', endpoint='login.google'),
+    Rule('/google/authorized', endpoint='authorized.google'),
+    Rule('/logout', endpoint='logout'),
 }
