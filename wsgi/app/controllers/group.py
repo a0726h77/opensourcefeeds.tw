@@ -209,7 +209,7 @@ def get_github_username(url):
     if m:
         return m.groups()[0]
 
-    m = re.search('https://github.com/([\w\.]+)[/]?', url)
+    m = re.search('https://github.com/([\w\-]+)[/]?', url)
     if m:
         return m.groups()[0]
 
