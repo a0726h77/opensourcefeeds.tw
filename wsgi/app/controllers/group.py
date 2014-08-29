@@ -34,7 +34,10 @@ def page(group_id):
     group_websites_no_icon = []
     for group_website in group_websites:
         if group_website.name.lower().replace(' ', '') in icon_list:
-            group_websites_has_icon.append(group_website)
+            if group_website.name == 'IRC' and 'freenode' in group_website.url:
+                group_websites_has_icon.append({'name': 'IRC', 'url': 'http://webchat.freenode.net/?channels=h4'})
+            else:
+                group_websites_has_icon.append(group_website)
         else:
             group_websites_no_icon.append(group_website)
 
@@ -109,7 +112,7 @@ def add():
 
 @app.endpoint('group.edit')
 def edit(group_id):
-    support_sites = ['Accupass', 'Blogger', 'Facebook', 'Flickr', 'GitHub', 'Google+', 'Google Groups', 'Hackpad', 'KKTIX', 'Meetup', 'Plurk', 'Twitter', 'Ustream', 'Wikidot', 'YouTube', 'Peatix', 'Trello', 'Tumblr']
+    support_sites = ['Accupass', 'Blogger', 'Facebook', 'Flickr', 'GitHub', 'Google+', 'Google Groups', 'Hackpad', 'KKTIX', 'Meetup', 'Plurk', 'Twitter', 'Ustream', 'Wikidot', 'YouTube', 'Peatix', 'Trello', 'Tumblr', 'IRC']
     support_sites.sort()
     icon_list = list_icon_name()
 
