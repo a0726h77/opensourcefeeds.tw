@@ -13,5 +13,6 @@ urlpatterns = {
     Rule('/robots.txt', endpoint='robots.txt'),
     Rule('/google/login', endpoint='login.google'),
     Rule('/google/authorized', endpoint='authorized.google'),
+    Rule('/login', endpoint='login'),
     Rule('/logout', endpoint='logout'),
 }

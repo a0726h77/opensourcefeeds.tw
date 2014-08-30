@@ -15,6 +15,11 @@ def index():
     return redirect(url_for('group.all_html'))
 
 
+@app.endpoint('login')
+def login():
+    return render_template('login.html')
+
+
 @app.endpoint('logout')
 def logout():
     session.clear()

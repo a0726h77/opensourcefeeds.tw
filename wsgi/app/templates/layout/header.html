@@ -29,13 +29,7 @@
                         </div>
                     </li>
                     {% else %}
-                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-581"><a href="#page-styles">登入</a>
-                        <div class="sub-menu">
-                        <ul>
-                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-109"><a href="{{ url_for('login.google') }}">使用 Google 登入</a></li>
-                        </ul>
-                        </div>
-                    </li>
+                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-581"><a href="{{ url_for('login') }}">登入</a></li>
                     {% endif %}
                 </ul>
             </div>
