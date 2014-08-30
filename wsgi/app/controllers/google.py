@@ -35,7 +35,7 @@ def authorized():
     # get response
     json_path = 'https://www.googleapis.com/oauth2/v1/userinfo'
     session_json = oauth2_session.get(json_path).json()
-    # session_json = dict((k, unicode(v).encode('utf-8')) for k, v in session_json.iteritems())
+    session_json = dict((k, unicode(v).encode('utf-8')) for k, v in session_json.iteritems())
 
     # save user
     user = Users.query.filter(Users.email == session_json['email']).first()
@@ -51,8 +51,8 @@ def authorized():
 
     # set session
     session['user_id'] = user.id
-    # session['user_name'] = session_json['given_name'].decode('utf-8') if session_json['given_name'] else session_json['name'].decode('utf-8')
-    session['user_name'] = session_json['given_name'] if session_json['given_name'] else session_json['name']
+    session['user_name'] = session_json['given_name'].decode('utf-8') if session_json['given_name'] else session_json['name'].decode('utf-8')
+    # session['user_name'] = session_json['given_name'] if session_json['given_name'] else session_json['name']
     session['user_email'] = user.email
 
     return redirect(url_for('index'))
