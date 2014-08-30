@@ -162,9 +162,22 @@ def edit(group_id):
 def all_html():
     if 'user_id' in session:
         # 使用者關注的社群排在前面
-        groups = db.session.query(Groups, GroupTypes, UserStarGroup).outerjoin(UserStarGroup, Groups.id == UserStarGroup.group_id).filter(Groups.type == GroupTypes.id).order_by(UserStarGroup.group_id.desc(), Groups.type, Groups.name).all()
+        groups = db.session.query(Groups, GroupTypes, UserStarGroup).outerjoin(UserStarGroup, Groups.id == UserStarGroup.group_id).filter(Groups.type == GroupTypes.id)
+
+        # TODO
+        # search location
+        # search tags
+        if request.method == 'POST':  # 搜尋相關社群
+            groups = groups.filter(db.or_(Groups.name.like('%%%s%%' % request.form['search']), Groups.alias_name.like('%%%s%%' % request.form['search']), Groups.short_name.like('%%%s%%' % request.form['search'])))
+
+        groups = groups.order_by(UserStarGroup.group_id.desc(), Groups.type, Groups.name).all()
     else:
-        groups = db.session.query(Groups, GroupTypes).filter(Groups.type == GroupTypes.id).order_by(Groups.type, Groups.name).all()
+        groups = db.session.query(Groups, GroupTypes).filter(Groups.type == GroupTypes.id)
+
+        if request.method == 'POST':  # 搜尋相關社群
+            groups = groups.filter(db.or_(Groups.name.like('%%%s%%' % request.form['search']), Groups.alias_name.like('%%%s%%' % request.form['search']), Groups.short_name.like('%%%s%%' % request.form['search'])))
+
+        groups = groups.order_by(Groups.type, Groups.name).all()
 
     return render_template('group/list.html', groups=groups)
 

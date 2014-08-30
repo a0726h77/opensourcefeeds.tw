@@ -4,6 +4,13 @@
 
             <div id="gk-mainmenu-collapse" class="menu-hidden" data-btn="gk-mainmenu-toggle">
                 <ul id="main-menu" class="menu gk_normal">
+                    <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-581">
+                        <form class="navbar-form navbar-left" role="search" action="{{ url_for('group.all_html') }}" method="post">
+                            <div class="form-group">
+                                <input type="text" class="form-control" name="search" placeholder="Search">
+                            </div>
+                        </form>
+                    </li>
                     <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-581"><a href="#page-styles">社群列表</a>
                         <div class="sub-menu">
                         <ul>
