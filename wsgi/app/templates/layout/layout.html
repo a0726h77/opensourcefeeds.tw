@@ -39,6 +39,12 @@
     </script>
     <!-- Google Analytics -->
 
+    <!-- WEB ROOT URL -->
+    <script>
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+    </script>
+    <!-- WEB ROOT URL -->
+
     {% block head_js %}{% endblock %}
 </head>
 <body class="home blog custom-background" data-tablet-width="900">
