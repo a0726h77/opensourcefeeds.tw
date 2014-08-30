@@ -162,7 +162,12 @@ def edit(group_id):
 def all_html():
     groups = db.session.query(Groups, GroupTypes).filter(Groups.type == GroupTypes.id).order_by(Groups.type, Groups.name).all()
 
-    return render_template('group/list.html', groups=groups)
+    user_star_groups = None
+    if 'user_id' in session:
+        user_star_groups = UserStarGroup.query.filter(UserStarGroup.user_id == session['user_id']).all()
+        user_star_groups = [group.group_id for group in user_star_groups]
+
+    return render_template('group/list.html', groups=groups, user_star_groups=user_star_groups)
 
 
 @app.endpoint('group.star')
