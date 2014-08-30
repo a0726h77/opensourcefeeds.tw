@@ -18,6 +18,11 @@
             {% endif %}
         </div>
         <div class="col-md-6" style="text-align:right;">
+            {% if star %}
+                <button id="star_button" type="button" class="btn btn-default" data-status="star"><span class="glyphicon glyphicon-star"></span> Unstar</button>
+            {% else %}
+                <button id="star_button" type="button" class="btn btn-default" data-status="unstar"><span class="glyphicon glyphicon-star"></span> Star</button>
+            {% endif %}
             <a href="{{ url_for('group.edit', group_id=group.Groups.id) }}">編輯頁面</a>
             <br>
             <br>
@@ -103,5 +108,33 @@
         DescCharacterLimit: 100
     });
     {% endfor %}
+
+    // toggle star button
+    $('#star_button').click(function(){
+        if($('#star_button').attr('data-status') == 'star'){
+            $.ajax({
+                url: $SCRIPT_ROOT + "/group/{{ group.Groups.id }}/unstar",
+                success: function(data) {
+                    $('#star_button').attr('data-status', 'unstar').val();
+                    $('#star_button').html('<span class="glyphicon glyphicon-star"></span> Star');
+                },
+                error: function(data) {
+                    window.location = "{{ url_for('login') }}";
+                }
+            });
+        }
+        else{
+            $.ajax({
+                url: $SCRIPT_ROOT + "/group/{{ group.Groups.id }}/star",
+                success: function(data) {
+                    $('#star_button').attr('data-status', 'star').val();
+                    $('#star_button').html('<span class="glyphicon glyphicon-star"></span> Unstar');
+                },
+                error: function(data) {
+                    window.location = "{{ url_for('login') }}";
+                }
+            });
+        }
+    });
 </script>
 {% endblock %}

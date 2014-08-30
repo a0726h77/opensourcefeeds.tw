@@ -16,6 +16,7 @@ from app.models.group_types import GroupTypes
 from app.models.group_websites import GroupWebsites
 from app.models.events import Events
 from app.models.group_facebook_id import GroupFacebookID
+from app.models.user_star_group import UserStarGroup
 
 
 @app.endpoint('group.page')
@@ -99,7 +100,13 @@ def page(group_id):
                 feeds.append({'title': 'YouTube', 'url': 'https://gdata.youtube.com/feeds/api/users/%s/uploads' % youtube_username})
     ## rss feed link ##
 
-    return render_template('group/page.html', group=group, group_websites_no_icon=group_websites_no_icon, group_websites_has_icon=group_websites_has_icon, recent_events=recent_events, past_events=past_events, feeds=feeds, repos=repos)
+    ## user star group ##
+    star = None
+    if 'user_id' in session:
+        star = UserStarGroup.query.filter(UserStarGroup.user_id == session['user_id'], UserStarGroup.group_id == group_id).all()
+    ## user star group ##
+
+    return render_template('group/page.html', group=group, group_websites_no_icon=group_websites_no_icon, group_websites_has_icon=group_websites_has_icon, recent_events=recent_events, past_events=past_events, feeds=feeds, repos=repos, star=star)
 
 
 @app.endpoint('group.add')
@@ -156,6 +163,28 @@ def all_html():
     groups = db.session.query(Groups, GroupTypes).filter(Groups.type == GroupTypes.id).order_by(Groups.type, Groups.name).all()
 
     return render_template('group/list.html', groups=groups)
+
+
+@app.endpoint('group.star')
+def star(group_id):
+    if 'user_id' in session:
+        user_star_group = db.session.execute(UserStarGroup.__table__.insert({'user_id': session['user_id'], 'group_id': group_id}))
+        db.session.commit()
+
+        return ''
+    else:
+        abort(500)
+
+
+@app.endpoint('group.unstar')
+def unstar(group_id):
+    if 'user_id' in session:
+        UserStarGroup.query.filter(UserStarGroup.user_id == session['user_id'], UserStarGroup.group_id == group_id).delete()
+        db.session.commit()
+
+        return ''
+    else:
+        abort(500)
 
 
 def list_icon_name():
