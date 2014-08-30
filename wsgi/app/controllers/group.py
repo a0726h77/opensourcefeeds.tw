@@ -160,14 +160,13 @@ def edit(group_id):
 
 @app.endpoint('group.all_html')
 def all_html():
-    groups = db.session.query(Groups, GroupTypes).filter(Groups.type == GroupTypes.id).order_by(Groups.type, Groups.name).all()
-
-    user_star_groups = None
     if 'user_id' in session:
-        user_star_groups = UserStarGroup.query.filter(UserStarGroup.user_id == session['user_id']).all()
-        user_star_groups = [group.group_id for group in user_star_groups]
+        # 使用者關注的社群排在前面
+        groups = db.session.query(Groups, GroupTypes, UserStarGroup).outerjoin(UserStarGroup, Groups.id == UserStarGroup.group_id).filter(Groups.type == GroupTypes.id).order_by(UserStarGroup.group_id.desc(), Groups.type, Groups.name).all()
+    else:
+        groups = db.session.query(Groups, GroupTypes).filter(Groups.type == GroupTypes.id).order_by(Groups.type, Groups.name).all()
 
-    return render_template('group/list.html', groups=groups, user_star_groups=user_star_groups)
+    return render_template('group/list.html', groups=groups)
 
 
 @app.endpoint('group.star')

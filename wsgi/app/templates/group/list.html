@@ -10,7 +10,7 @@
     <table>
     {% for group in groups %}
     <tr>
-        <td>{% if user_star_groups and group.Groups.id in user_star_groups %}<span class="glyphicon glyphicon-star"></span>{% endif %}</td>
+        <td>{% if group.UserStarGroup.group_id %}<span class="glyphicon glyphicon-star"></span>{% endif %}</td>
         <td><a href="{{ group.Groups.id }}">{{ group.Groups.name }}</a></td>
         <td>{% if group.Groups.alias_name %}{{ group.Groups.alias_name }}{% else %}-{% endif %}</td>
         <td>{% if group.Groups.short_name %}{{ group.Groups.short_name }}{% else %}-{% endif %}</td>
