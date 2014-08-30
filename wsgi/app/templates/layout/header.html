@@ -17,6 +17,9 @@
                         <div class="sub-menu">
                         <ul>
                             <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-109"><a href="{{ url_for('event.rss') }}">RSS</a></li>
+                            {% if 'user_id' in session %}
+                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-109"><a href="{{ url_for('event.star_group_rss', user_id=session['user_id']) }}">我關注的 (RSS)</a></li>
+                            {% endif %}
                         </ul>
                         </div>
                     </li>
