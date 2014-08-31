@@ -1,2 +1,4 @@
 User-agent: *
-Disallow:
+Disallow: /login
+Disallow: /group/add
+Disallow: /group/edit/
