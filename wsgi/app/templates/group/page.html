@@ -1,5 +1,7 @@
 {% extends "layout/layout.html" %}
 
+{% block title %}{{ group.Groups.name }} - {% endblock %}
+
 {% block head_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='FeedEk/css/FeedEk.css') }}">
 {% endblock %}
