@@ -14,17 +14,16 @@ from app.models.poi_types import POITypes
 # caculate distance
 @app.endpoint('place.cafe.index')
 def cafe_index():
+    poi_type = POITypes.query.filter(POITypes.name == 'Cafe').one()
+
     if request.method == 'POST':
-        if 'station' in request.form and request.form['station']:
-            places = Places.query.filter(Places.mrt == request.form['station']).all()
+        places = None
 
-            return render_template('place/cafe_list.html', places=places)
+        if 'station' in request.form and request.form['station']:  # 臨近捷運站
+            places = Places.query.filter(Places.mrt == request.form['station'], Places.poi_type == poi_type.id).all()
+        elif 'name' in request.form:  # 關鍵字查詢
+            places = Places.query.filter(db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
 
-        if 'name' in request.form:
-            poi_type = POITypes.query.filter(POITypes.name == 'Cafe').one()
-
-            places = Places.query.filter(db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name'])), Places.poi_type == poi_type.id).all()
-
-            return render_template('place/cafe_list.html', places=places)
+        return render_template('place/cafe_list.html', places=places)
 
     return ''
