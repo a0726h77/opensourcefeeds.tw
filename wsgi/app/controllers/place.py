@@ -22,12 +22,12 @@ def cafe_index():
         if 'station' in request.form and request.form['station']:  # 臨近捷運站
             # places = Places.query.filter(Places.mrt == request.form['station'], Places.poi_type == poi_type.id).all()
 
-            scale = 0.6
+            scale = 0.57
             Places.coords = classmethod(lambda s: (s.lat, s.lng))
 
             mrt = Places.query.filter(Places.id == request.form['station']).one()
 
-            places = Places.query.filter(db.or_(calc_distance(Places.coords(), (mrt.lat, mrt.lng)) < scale, Places.mrt == request.form['station']), Places.poi_type == poi_type.id).all()
+            places = Places.query.filter(db.or_(calc_distance(Places.coords(), (mrt.lat, mrt.lng)) < scale, Places.mrt == request.form['station']), Places.poi_type == poi_type.id).order_by(calc_distance(Places.coords(), (mrt.lat, mrt.lng))).all()
         elif 'name' in request.form:  # 關鍵字查詢
             places = Places.query.filter(db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
 
