@@ -7,6 +7,8 @@ from flask import Flask, request, session, url_for, redirect, \
 from app.models.models import db
 from app.models.places import Places
 from app.models.poi_types import POITypes
+from app.models.place_tag import PlaceTag
+from app.models.place_tags import PlaceTags
 
 
 # TODO
@@ -32,6 +34,35 @@ def cafe_index():
             places = Places.query.filter(db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
 
         return render_template('place/cafe_list.html', places=places)
+
+    return ''
+
+
+@app.endpoint('place.hackerspace.index')
+def hackerspace_index():
+    poi_tag = PlaceTags.query.filter(PlaceTags.name == 'Hackerspace').one()
+
+    if request.method == 'POST':
+        places = None
+
+        query_place_tag = PlaceTag.query.with_entities(PlaceTag.place_id).filter(PlaceTag.tag_id == poi_tag.id)
+
+        if 'location' in request.form and request.form['location']:  # 北, 中, 南
+            scale = 20  # 尚未校正
+            Places.coords = classmethod(lambda s: (s.lat, s.lng))
+
+            if request.form['location'] == 'n':
+                lat, lng = 25.047923,121.51708000000008
+            elif request.form['location'] == 'c':
+                lat, lng = 24.13678, 120.68500799999993
+            elif request.form['location'] == 's':
+                lat, lng = 22.997144,120.21296600000005
+
+            places = Places.query.filter(Places.id.in_(query_place_tag), calc_distance(Places.coords(), (lat, lng)) < scale).order_by(calc_distance(Places.coords(), (lat, lng))).all()
+        elif 'name' in request.form:  # 關鍵字查詢
+            places = Places.query.filter(Places.id.in_(query_place_tag), db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
+
+        return render_template('place/hackerspace_list.html', places=places)
 
     return ''
 
