@@ -105,6 +105,31 @@
             </div>
           </div>
         </form>
+
+        <hr>
+
+        <h4>All Place</h4>
+        <form class="form-horizontal" role="form" action="{{ url_for('place.search') }}" method="POST">
+          <div class="form-group">
+            <label for="inputAddress" class="col-sm-2 control-label">臨近地點</label>
+            <div class="col-sm-10">
+              <input type="name" class="form-control" id="inputAddress" name="address">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputSeats" class="col-sm-2 control-label">人數</label>
+            <div class="col-sm-4">
+              <input type="text" class="form-control" id="inputMinSeats" name="min_seats">
+              ~
+              <input type="text" class="form-control" id="inputMxnSeats" name="max_seats">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-default">尋找</button>
+            </div>
+          </div>
+        </form>
     </div>
 </div>
 {% endblock %}

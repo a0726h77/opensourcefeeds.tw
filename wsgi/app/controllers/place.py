@@ -10,6 +10,37 @@ from app.models.places import Places
 from app.models.poi_types import POITypes
 from app.models.place_tag import PlaceTag
 from app.models.place_tags import PlaceTags
+from app.models.events import Events
+
+
+@app.endpoint('place.search')
+def search():
+    if request.method == 'POST':
+        places = None
+
+        if 'address' in request.form:
+            coordinates = address_to_coordinates(request.form['address'])
+
+            if coordinates:
+                scale = 20
+                Places.coords = classmethod(lambda s: (s.lat, s.lng))
+
+                places = Places.query.filter(db.or_(calc_distance(Places.coords(), (coordinates[0], coordinates[1])) < scale))
+
+                # 搜尋辦過活動的場地有沒有適合的人數
+                query_event_place = Events.query.with_entities(Events.place)
+
+                if 'min_seats' in request.form and request.form['min_seats']:
+                    query_event_place = query_event_place.filter(Events.people_count >= request.form['min_seats'])
+
+                if 'max_seats' in request.form and request.form['max_seats']:
+                    query_event_place = query_event_place.filter(Events.people_count <= request.form['max_seats'])
+
+                places = places.filter(Places.id.in_(query_event_place)).order_by(calc_distance(Places.coords(), (coordinates[0], coordinates[1]))).all()
+
+        return render_template('place/search.html', places=places)
+    else:
+        return ''
 
 
 # TODO
