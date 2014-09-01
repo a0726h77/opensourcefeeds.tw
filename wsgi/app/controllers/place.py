@@ -3,6 +3,7 @@
 from app import app
 from flask import Flask, request, session, url_for, redirect, \
      render_template, abort, g, flash, _app_ctx_stack, send_from_directory
+from pygeocoder import Geocoder
 
 from app.models.models import db
 from app.models.places import Places
@@ -39,7 +40,6 @@ def cafe_index():
 
 
 # TODO
-# translate address to lat, lng
 # redirect to place page
 @app.endpoint('place.cafe.add')
 def cafe_add():
@@ -47,6 +47,13 @@ def cafe_add():
         poi_type = POITypes.query.filter(POITypes.name == 'Cafe').one()
 
         data = dict([[k, v] for k, v in request.form.items()])  # 將 form 轉爲可新增資料的變數
+
+        if 'address' in data:
+            coordinates = address_to_coordinates(request.form['address'])
+
+            if coordinates:
+                data['lat'] = coordinates[0]
+                data['lng'] = coordinates[1]
 
         data['wireless'] = 1 if 'wireless' in data else 0
         data['electrical_plug'] = 1 if 'electrical_plug' in data else 0
@@ -128,3 +135,13 @@ def coworking_space_index():
 def calc_distance(latlong1, latlong2):
     return db.func.sqrt(db.func.pow(69.1 * (latlong1[0] - latlong2[0]), 2)
                       + db.func.pow(53.0 * (latlong1[1] - latlong2[1]), 2))
+
+
+def address_to_coordinates(address):
+    try:
+        results = Geocoder.geocode(address)
+
+        return results[0].coordinates
+    except:
+        print 'address not found : %s' % address
+        return None
