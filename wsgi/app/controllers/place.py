@@ -48,7 +48,7 @@ def hackerspace_index():
         query_place_tag = PlaceTag.query.with_entities(PlaceTag.place_id).filter(PlaceTag.tag_id == poi_tag.id)
 
         if 'location' in request.form and request.form['location']:  # 北, 中, 南
-            scale = 20  # 尚未校正
+            scale = 60  # 尚需校正
             Places.coords = classmethod(lambda s: (s.lat, s.lng))
 
             if request.form['location'] == 'n':
