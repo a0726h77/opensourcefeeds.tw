@@ -11,8 +11,8 @@ from app.models.group_types import GroupTypes
 
 @app.endpoint('index')
 def index():
-    # return render_template('index.html')
-    return redirect(url_for('group.all_html'))
+    return render_template('index.html')
+    # return redirect(url_for('group.all_html'))
 
 
 @app.endpoint('login')
