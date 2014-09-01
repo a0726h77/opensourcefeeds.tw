@@ -81,7 +81,7 @@
         <hr>
 
         <h4>Coworking Space</h4>
-        <form class="form-horizontal" role="form">
+        <form class="form-horizontal" role="form" action="{{ url_for('place.coworking_space.index') }}" method="POST">
           <div class="form-group">
             <label for="inputName" class="col-sm-2 control-label">名稱</label>
             <div class="col-sm-10">

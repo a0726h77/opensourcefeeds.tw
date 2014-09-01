@@ -15,6 +15,7 @@ urlpatterns = {
     Rule('/user/<user_id>/event/rss', endpoint='event.star_group_rss'),
     Rule('/place/cafe', endpoint='place.cafe.index'),
     Rule('/place/hackerspace', endpoint='place.hackerspace.index'),
+    Rule('/place/coworking_space', endpoint='place.coworking_space.index'),
     Rule('/robots.txt', endpoint='robots.txt'),
     Rule('/google/login', endpoint='login.google'),
     Rule('/google/authorized', endpoint='authorized.google'),
