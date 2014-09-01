@@ -2,7 +2,7 @@
 
 from app.models.models import db
 
-class PlacesTag(db.Model):
+class PlaceTag(db.Model):
     __tablename__ = 'place_tag'
 
     place_id = db.Column(db.Integer, primary_key=True)
