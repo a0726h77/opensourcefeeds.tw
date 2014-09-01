@@ -25,11 +25,11 @@
         <h2>找空間</h2>
 
         <h4>咖啡廳</h4>
-        <form class="form-horizontal" role="form">
+        <form class="form-horizontal" role="form" action="{{ url_for('place.cafe.index') }}" method="POST">
           <div class="form-group">
             <label for="inputName" class="col-sm-2 control-label">名稱</label>
             <div class="col-sm-10">
-              <input type="name" class="form-control" id="inputName">
+              <input type="name" class="form-control" id="inputName" name="name">
             </div>
           </div>
           <div class="form-group">
