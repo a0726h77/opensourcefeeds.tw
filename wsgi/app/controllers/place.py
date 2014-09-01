@@ -11,9 +11,15 @@ from app.models.poi_types import POITypes
 
 # TODO
 # group by lat, lng
+# caculate distance
 @app.endpoint('place.cafe.index')
 def cafe_index():
     if request.method == 'POST':
+        if 'station' in request.form and request.form['station']:
+            places = Places.query.filter(Places.mrt == request.form['station']).all()
+
+            return render_template('place/cafe_list.html', places=places)
+
         if 'name' in request.form:
             poi_type = POITypes.query.filter(POITypes.name == 'Cafe').one()
 
