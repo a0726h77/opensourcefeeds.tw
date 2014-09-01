@@ -11,4 +11,6 @@ class Events(db.Model):
     url = db.Column(db.String(255), nullable=False)
     start_datetime = db.Column(db.DateTime)
     end_datetime = db.Column(db.DateTime)
+    place = db.Column(db.Integer)
+    people_count = db.Column(db.Integer)
     updated = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
