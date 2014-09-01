@@ -3,15 +3,19 @@
 from app import app
 from flask import Flask, request, session, url_for, redirect, \
      render_template, abort, g, flash, _app_ctx_stack, send_from_directory
+import datetime
 
 from app.models.models import db
 from app.models.groups import Groups
 from app.models.group_types import GroupTypes
+from app.models.events import Events
 
 
 @app.endpoint('index')
 def index():
-    return render_template('index.html')
+    recent_events = db.session.query(Groups, Events).filter(Groups.id == Events.group_id, Events.start_datetime > datetime.datetime.now()).order_by(Events.start_datetime).all()
+
+    return render_template('index.html', recent_events=recent_events)
     # return redirect(url_for('group.all_html'))
 
 

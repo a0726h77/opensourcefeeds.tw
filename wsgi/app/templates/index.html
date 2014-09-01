@@ -10,6 +10,15 @@
 <div class="row">
     <div class="col-md-6">
         <h3>近期活動</h3>
+        <table>
+        {% for event in recent_events %}
+        <tr>
+            <td width="10%">{{ event.Events.start_datetime.strftime("%m/%d") }}</td>
+            <td><a href="{{ url_for('group.page', group_id=event.Groups.id) }}">{{ event.Groups.name }}</a></td>
+            <td><a href="{{ event.Events.url }}" target="_blank">{{ event.Events.name }}</a></td>
+        </tr>
+        {% endfor %}
+        </table>
     </div>
     <div class="col-md-6">
         <h3>找空間</h3>
