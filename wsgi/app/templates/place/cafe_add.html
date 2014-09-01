@@ -1,0 +1,78 @@
+{% extends "layout/layout.html" %}
+
+{% block head_css %}
+{% endblock %}
+
+{% block head_js %}
+{% endblock %}
+
+{% block body_content %}
+<div class="row">
+    <div class="col-md-8">
+
+    <button type="button" class="btn btn-primary" onclick="location.href=''">返回瀏覽頁面</button>
+
+    <h2></h2>
+    <div class="bs-example">
+        <form class="form-horizontal" role="form" method="POST">
+            <div class="form-group">
+                <label for="inputName" class="col-sm-2 control-label">* 店名</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputName" name="name" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputWireless" class="col-sm-2 control-label">無線網路</label>
+                <div class="col-sm-10">
+                    <input type="checkbox" name="wireless">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputElectricalPlug" class="col-sm-2 control-label">電源插座</label>
+                <div class="col-sm-10">
+                    <input type="checkbox" name="electrical_plug">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputAddress" class="col-sm-2 control-label">地址</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputAddress" name="address">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputPhone" class="col-sm-2 control-label">電話</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputPhone" name="phone">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputURL" class="col-sm-2 control-label">網址</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputURL" name="url" placeholder="http://">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputStation" class="col-sm-2 control-label">臨近捷運站</label>
+                <div class="col-sm-10">
+                    <select class="form-control" name="mrt" required>
+                        <option></option>
+                        {% for station in stations: %}
+                        <option value="{{ station.id }}">{{ station.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">新增</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block body_js %}
+{% endblock %}

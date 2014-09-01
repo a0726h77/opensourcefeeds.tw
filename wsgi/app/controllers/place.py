@@ -38,6 +38,35 @@ def cafe_index():
     return ''
 
 
+# TODO
+# translate address to lat, lng
+# redirect to place page
+@app.endpoint('place.cafe.add')
+def cafe_add():
+    if request.method == 'POST':
+        poi_type = POITypes.query.filter(POITypes.name == 'Cafe').one()
+
+        data = dict([[k, v] for k, v in request.form.items()])  # 將 form 轉爲可新增資料的變數
+
+        data['wireless'] = 1 if 'wireless' in data else 0
+        data['electrical_plug'] = 1 if 'electrical_plug' in data else 0
+
+        data['poi_type'] = poi_type.id
+
+        place = db.session.execute(Places.__table__.insert(data))
+        db.session.commit()
+
+        return redirect(url_for('index'))
+    else:
+        ## mrt station list ##
+        poi_type = POITypes.query.filter(POITypes.name == 'Station').one()
+
+        stations = Places.query.filter(Places.poi_type == poi_type.id).order_by(Places.name).all()
+        ## mrt station list ##
+
+        return render_template('place/cafe_add.html', stations=stations)
+
+
 @app.endpoint('place.hackerspace.index')
 def hackerspace_index():
     poi_tag = PlaceTags.query.filter(PlaceTags.name == 'Hackerspace').one()
