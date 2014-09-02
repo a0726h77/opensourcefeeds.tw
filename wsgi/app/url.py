@@ -17,6 +17,7 @@ urlpatterns = {
     Rule('/place/cafe', endpoint='place.cafe.index'),
     Rule('/place/add/cafe', endpoint='place.cafe.add'),
     Rule('/place/hackerspace', endpoint='place.hackerspace.index'),
+    Rule('/place/add/hackerspace', endpoint='place.hackerspace.add'),
     Rule('/place/coworking_space', endpoint='place.coworking_space.index'),
     Rule('/robots.txt', endpoint='robots.txt'),
     Rule('/google/login', endpoint='login.google'),

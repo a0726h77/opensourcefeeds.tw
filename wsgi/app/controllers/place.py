@@ -144,6 +144,33 @@ def hackerspace_index():
     return ''
 
 
+# TODO
+# redirect to place page
+@app.endpoint('place.hackerspace.add')
+def hackerspace_add():
+    if request.method == 'POST':
+        place_tag = PlaceTags.query.filter(PlaceTags.name == 'Hackerspace').one()
+
+        data = dict([[k, v] for k, v in request.form.items()])  # 將 form 轉爲可新增資料的變數
+
+        if 'address' in data:
+            coordinates = address_to_coordinates(request.form['address'])
+
+            if coordinates:
+                data['lat'] = coordinates[0]
+                data['lng'] = coordinates[1]
+
+        place = db.session.execute(Places.__table__.insert(data))
+        db.session.commit()
+
+        db.session.execute(PlaceTag.__table__.insert({'place_id': place.lastrowid, 'tag_id': place_tag.id}))
+        db.session.commit()
+
+        return redirect(url_for('index'))
+    else:
+        return render_template('place/hackerspace_add.html')
+
+
 @app.endpoint('place.coworking_space.index')
 def coworking_space_index():
     poi_tag = PlaceTags.query.filter(PlaceTags.name == 'Coworking Space').one()
