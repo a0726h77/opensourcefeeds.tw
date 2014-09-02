@@ -12,7 +12,7 @@
 
     <h2>{{ place.name }}</h2>
 
-    <button type="button" class="btn btn-primary" onclick="location.href=''">返回瀏覽頁面</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='{{ url_for('place.page', place_id=place.id) }}'">返回瀏覽頁面</button>
 
     <h2></h2>
     <div class="bs-example">
