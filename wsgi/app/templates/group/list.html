@@ -17,8 +17,8 @@ table, td, th {
     <tr>
         <td>{% if 'UserStarGroup' in group.keys() and group.UserStarGroup.group_id %}<span class="glyphicon glyphicon-star"></span>{% endif %}</td>
         <td><a href="{{ '%sgroup/%s' % (request.url_root, group.Groups.id) }}">{{ group.Groups.name }}</a></td>
-        <td>{% if group.Groups.alias_name %}{{ group.Groups.alias_name }}{% else %}-{% endif %}</td>
-        <td>{% if group.Groups.short_name %}{{ group.Groups.short_name }}{% else %}-{% endif %}</td>
+        <td>{% if group.Groups.alias_name %}<a href="{{ '%sgroup/%s' % (request.url_root, group.Groups.id) }}">{{ group.Groups.alias_name }}</a>{% else %}-{% endif %}</td>
+        <td>{% if group.Groups.short_name %}<a href="{{ '%sgroup/%s' % (request.url_root, group.Groups.id) }}">{{ group.Groups.short_name }}</a>{% else %}-{% endif %}</td>
     </tr>
     {% endfor %}
     </table>
