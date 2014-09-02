@@ -84,6 +84,72 @@ def add():
         return render_template('place/add.html', stations=stations)
 
 
+# TODO
+# redirect to place page
+@app.endpoint('place.edit')
+def edit(place_id):
+    if request.method == 'POST':
+        data = dict([[k, v] for k, v in request.form.items()])  # 將 form 轉爲可新增資料的變數
+
+        if 'address' in data:
+            coordinates = address_to_coordinates(request.form['address'])
+
+            if coordinates:
+                data['lat'] = coordinates[0]
+                data['lng'] = coordinates[1]
+
+        data['wireless'] = 1 if 'wireless' in data else 0
+        data['electrical_plug'] = 1 if 'electrical_plug' in data else 0
+
+        place_tag = [int(place_tag) for place_tag in request.form.getlist("place_tag")]
+        del data['place_tag']
+
+        place = Places.query.filter(Places.id == place_id).update(data)
+        db.session.commit()
+
+        ## 新增/刪除 place tag ##
+        place_has_tag = PlaceTag.query.filter(PlaceTag.place_id == place_id).all()
+        place_has_tag = [tag.tag_id for tag in place_has_tag]
+
+        # 新增加的
+        added = set(place_tag) - set(place_has_tag)
+        for tag_id in added:
+            db.session.execute(PlaceTag.__table__.insert({'place_id': place_id, 'tag_id': tag_id}))
+
+        # 刪除的
+        removed = set(place_has_tag) - set(place_tag)
+        for tag_id in removed:
+            PlaceTag.query.filter(PlaceTag.place_id == place_id, PlaceTag.tag_id == tag_id).delete()
+
+        db.session.commit()
+        ## 新增/刪除 place tag ##
+
+        return redirect(url_for('place.page', place_id=place_id))
+    else:
+        place = Places.query.filter(Places.id == place_id).one()
+
+        ## mrt station list ##
+        poi_type = POITypes.query.filter(POITypes.name == 'Station').one()
+
+        stations = Places.query.filter(Places.poi_type == poi_type.id).order_by(Places.name).all()
+        ## mrt station list ##
+
+        ## place in tags ##
+        place_has_tag = PlaceTag.query.filter(PlaceTag.place_id == place_id).all()
+        place_has_tag = [tag.tag_id for tag in place_has_tag]
+        ## place in tags ##
+
+        ## place tags ##
+        place_tags = PlaceTags.query.all()
+        ## place tags ##
+
+        ## poi types ##
+        poi_types = POITypes.query.all()
+        ## poi types ##
+
+        return render_template('place/edit.html', place=place, stations=stations, poi_types=poi_types, place_tags=place_tags, place_has_tag=place_has_tag)
+
+
 @app.endpoint('place.page')
 def page(place_id):
     place = Places.query.filter(Places.id == place_id).one()
