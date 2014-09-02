@@ -22,12 +22,17 @@ def search():
             coordinates = address_to_coordinates(request.form['address'])
 
             if coordinates:
-                scale = 20
-                Places.coords = classmethod(lambda s: (s.lat, s.lng))
+                ## 搜尋現有的場地人數 ##
+                query_place = Places.query.with_entities(Places.id)
 
-                places = Places.query.filter(db.or_(calc_distance(Places.coords(), (coordinates[0], coordinates[1])) < scale))
+                if 'min_seats' in request.form and request.form['min_seats']:
+                    query_place = query_place.filter(Places.seats >= request.form['min_seats'])
 
-                # 搜尋辦過活動的場地有沒有適合的人數
+                if 'max_seats' in request.form and request.form['max_seats']:
+                    query_place = query_place.filter(Places.seats <= request.form['max_seats'])
+                ## 搜尋現有的場地人數 ##
+
+                ## 搜尋辦過活動的場地有沒有適合的人數 ##
                 query_event_place = Events.query.with_entities(Events.place)
 
                 if 'min_seats' in request.form and request.form['min_seats']:
@@ -35,8 +40,13 @@ def search():
 
                 if 'max_seats' in request.form and request.form['max_seats']:
                     query_event_place = query_event_place.filter(Events.people_count <= request.form['max_seats'])
+                ## 搜尋辦過活動的場地有沒有適合的人數 ##
 
-                places = places.filter(Places.id.in_(query_event_place)).order_by(calc_distance(Places.coords(), (coordinates[0], coordinates[1]))).all()
+                scale = 20
+                Places.coords = classmethod(lambda s: (s.lat, s.lng))
+
+                places = Places.query.filter(db.or_(calc_distance(Places.coords(), (coordinates[0], coordinates[1])) < scale))
+                places = places.filter(db.or_(Places.id.in_(query_place), Places.id.in_(query_event_place))).order_by(calc_distance(Places.coords(), (coordinates[0], coordinates[1]))).all()
 
         return render_template('place/search.html', places=places)
     else:
