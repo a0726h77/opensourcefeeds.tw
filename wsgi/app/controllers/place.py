@@ -200,6 +200,33 @@ def coworking_space_index():
     return ''
 
 
+# TODO
+# redirect to place page
+@app.endpoint('place.coworking_space.add')
+def coworking_space_add():
+    if request.method == 'POST':
+        place_tag = PlaceTags.query.filter(PlaceTags.name == 'Coworking Space').one()
+
+        data = dict([[k, v] for k, v in request.form.items()])  # 將 form 轉爲可新增資料的變數
+
+        if 'address' in data:
+            coordinates = address_to_coordinates(request.form['address'])
+
+            if coordinates:
+                data['lat'] = coordinates[0]
+                data['lng'] = coordinates[1]
+
+        place = db.session.execute(Places.__table__.insert(data))
+        db.session.commit()
+
+        db.session.execute(PlaceTag.__table__.insert({'place_id': place.lastrowid, 'tag_id': place_tag.id}))
+        db.session.commit()
+
+        return redirect(url_for('index'))
+    else:
+        return render_template('place/coworking_space_add.html')
+
+
 def calc_distance(latlong1, latlong2):
     return db.func.sqrt(db.func.pow(69.1 * (latlong1[0] - latlong2[0]), 2)
                       + db.func.pow(53.0 * (latlong1[1] - latlong2[1]), 2))
