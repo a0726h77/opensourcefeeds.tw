@@ -11,6 +11,7 @@ from app.models.poi_types import POITypes
 from app.models.place_tag import PlaceTag
 from app.models.place_tags import PlaceTags
 from app.models.events import Events
+from app.models.user_star_place import UserStarPlace
 
 
 @app.endpoint('place.search')
@@ -160,7 +161,13 @@ def page(place_id):
         station = Places.query.filter(Places.id == place.mrt).first()
     ## near station ##
 
-    return render_template('place/page.html', place=place, station=station)
+    ## user star place ##
+    star = None
+    if 'user_id' in session:
+        star = UserStarPlace.query.filter(UserStarPlace.user_id == session['user_id'], UserStarPlace.place_id == place_id).all()
+    ## user star place ##
+
+    return render_template('place/page.html', place=place, station=station, star=star)
 
 
 # TODO
@@ -335,6 +342,28 @@ def coworking_space_add():
         return redirect(url_for('index'))
     else:
         return render_template('place/coworking_space_add.html')
+
+
+@app.endpoint('place.star')
+def star(place_id):
+    if 'user_id' in session:
+        user_star_place = db.session.execute(UserStarPlace.__table__.insert({'user_id': session['user_id'], 'place_id': place_id}))
+        db.session.commit()
+
+        return ''
+    else:
+        abort(500)
+
+
+@app.endpoint('place.unstar')
+def unstar(place_id):
+    if 'user_id' in session:
+        UserStarPlace.query.filter(UserStarPlace.user_id == session['user_id'], UserStarPlace.place_id == place_id).delete()
+        db.session.commit()
+
+        return ''
+    else:
+        abort(500)
 
 
 def calc_distance(latlong1, latlong2):

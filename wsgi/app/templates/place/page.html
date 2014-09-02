@@ -90,7 +90,7 @@
     $('#star_button').click(function(){
         if($('#star_button').attr('data-status') == 'star'){
             $.ajax({
-                url: $SCRIPT_ROOT + "/group/{{ place.id }}/unstar",
+                url: $SCRIPT_ROOT + "/place/{{ place.id }}/unstar",
                 success: function(data) {
                     $('#star_button').attr('data-status', 'unstar').val();
                     $('#star_button').html('<span class="glyphicon glyphicon-star"></span> Star');
@@ -102,7 +102,7 @@
         }
         else{
             $.ajax({
-                url: $SCRIPT_ROOT + "/group/{{ place.id }}/star",
+                url: $SCRIPT_ROOT + "/place/{{ place.id }}/star",
                 success: function(data) {
                     $('#star_button').attr('data-status', 'star').val();
                     $('#star_button').html('<span class="glyphicon glyphicon-star"></span> Unstar');
