@@ -84,6 +84,19 @@ def add():
         return render_template('place/add.html', stations=stations)
 
 
+@app.endpoint('place.page')
+def page(place_id):
+    place = Places.query.filter(Places.id == place_id).one()
+
+    ## near station ##
+    station = None
+    if place.mrt:
+        station = Places.query.filter(Places.id == place.mrt).first()
+    ## near station ##
+
+    return render_template('place/page.html', place=place, station=station)
+
+
 # TODO
 # group by lat, lng
 # caculate distance

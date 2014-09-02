@@ -13,6 +13,7 @@ urlpatterns = {
     Rule('/group/<group_id>/unstar', endpoint='group.unstar'),
     Rule('/event/rss', endpoint='event.rss'),
     Rule('/user/<user_id>/event/rss', endpoint='event.star_group_rss'),
+    Rule('/place/<place_id>', endpoint='place.page'),
     Rule('/place/add', endpoint='place.add'),
     Rule('/place/search', endpoint='place.search'),
     Rule('/place/cafe', endpoint='place.cafe.index'),

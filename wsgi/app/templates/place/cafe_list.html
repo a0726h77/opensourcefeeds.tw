@@ -26,7 +26,7 @@ table, td, th {
     </tr>
     {% for place in places %}
     <tr>
-        <td>{{ place.name }}</td>
+        <td><a href="{{ url_for('place.page', place_id=place.id) }}"}>{{ place.name }}</a></td>
         <td>{% if place.address %}{{ place.address }}{% endif %}</td>
         <td style="text-align: center;">{% if place.phone %}{{ place.phone }}{% endif %}</td>
         <td style="text-align: center;">{% if place.wireless %}v{% endif %}</td>
