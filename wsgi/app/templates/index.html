@@ -27,14 +27,14 @@
         <h4>咖啡廳</h4>
         <form class="form-horizontal" role="form" action="{{ url_for('place.cafe.index') }}" method="POST">
           <div class="form-group">
-            <label for="inputName" class="col-sm-2 control-label">名稱</label>
-            <div class="col-sm-10">
+            <label for="inputName" class="col-sm-3 control-label">名稱</label>
+            <div class="col-sm-6">
               <input type="name" class="form-control" id="inputName" name="name">
             </div>
           </div>
           <div class="form-group">
-            <label for="inputStation" class="col-sm-2 control-label">臨近捷運</label>
-            <div class="col-sm-10">
+            <label for="inputStation" class="col-sm-3 control-label">臨近捷運</label>
+            <div class="col-sm-6">
                 <select class="form-control" name='station'>
                   <option></option>
                   {% for station in stations: %}
@@ -55,14 +55,14 @@
         <h4>Hackerspace</h4>
         <form class="form-horizontal" role="form" action="{{ url_for('place.hackerspace.index') }}" method="POST">
           <div class="form-group">
-            <label for="inputName" class="col-sm-2 control-label">名稱</label>
-            <div class="col-sm-10">
+            <label for="inputName" class="col-sm-3 control-label">名稱</label>
+            <div class="col-sm-6">
               <input type="name" class="form-control" id="inputName" name="name">
             </div>
           </div>
           <div class="form-group">
-            <label for="inputPlace" class="col-sm-2 control-label">地點</label>
-            <div class="col-sm-10">
+            <label for="inputPlace" class="col-sm-3 control-label">地點</label>
+            <div class="col-sm-6">
                 <select class="form-control" name='location'>
                   <option></option>
                   <option value="n">北</option>
@@ -83,14 +83,14 @@
         <h4>Coworking Space</h4>
         <form class="form-horizontal" role="form" action="{{ url_for('place.coworking_space.index') }}" method="POST">
           <div class="form-group">
-            <label for="inputName" class="col-sm-2 control-label">名稱</label>
-            <div class="col-sm-10">
+            <label for="inputName" class="col-sm-3 control-label">名稱</label>
+            <div class="col-sm-6">
               <input type="name" class="form-control" id="inputName" name="name">
             </div>
           </div>
           <div class="form-group">
-            <label for="inputPlace" class="col-sm-2 control-label">地點</label>
-            <div class="col-sm-10">
+            <label for="inputPlace" class="col-sm-3 control-label">地點</label>
+            <div class="col-sm-6">
                 <select class="form-control" name='location'>
                   <option></option>
                   <option value="n">北</option>
@@ -111,13 +111,13 @@
         <h4>All Place</h4>
         <form class="form-horizontal" role="form" action="{{ url_for('place.search') }}" method="POST">
           <div class="form-group">
-            <label for="inputAddress" class="col-sm-2 control-label">臨近地點</label>
-            <div class="col-sm-10">
-              <input type="name" class="form-control" id="inputAddress" name="address">
+            <label for="inputAddress" class="col-sm-3 control-label">* 概略臨近地點</label>
+            <div class="col-sm-6">
+              <input type="name" class="form-control" id="inputAddress" name="address" placeholder="ex: 臺北車站">
             </div>
           </div>
           <div class="form-group">
-            <label for="inputSeats" class="col-sm-2 control-label">人數</label>
+            <label for="inputSeats" class="col-sm-3 control-label">人數</label>
             <div class="col-sm-4">
               <input type="text" class="form-control" id="inputMinSeats" name="min_seats">
               ~
