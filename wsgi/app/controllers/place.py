@@ -269,5 +269,5 @@ def address_to_coordinates(address):
 
         return results[0].coordinates
     except:
-        print 'address not found : %s' % address
+        # print 'address not found : %s' % address
         return None
