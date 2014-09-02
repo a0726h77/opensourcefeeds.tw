@@ -54,6 +54,37 @@ def search():
 
 
 # TODO
+# redirect to place page
+@app.endpoint('place.add')
+def add():
+    if request.method == 'POST':
+        data = dict([[k, v] for k, v in request.form.items()])  # 將 form 轉爲可新增資料的變數
+
+        if 'address' in data:
+            coordinates = address_to_coordinates(request.form['address'])
+
+            if coordinates:
+                data['lat'] = coordinates[0]
+                data['lng'] = coordinates[1]
+
+        data['wireless'] = 1 if 'wireless' in data else 0
+        data['electrical_plug'] = 1 if 'electrical_plug' in data else 0
+
+        place = db.session.execute(Places.__table__.insert(data))
+        db.session.commit()
+
+        return redirect(url_for('index'))
+    else:
+        ## mrt station list ##
+        poi_type = POITypes.query.filter(POITypes.name == 'Station').one()
+
+        stations = Places.query.filter(Places.poi_type == poi_type.id).order_by(Places.name).all()
+        ## mrt station list ##
+
+        return render_template('place/add.html', stations=stations)
+
+
+# TODO
 # group by lat, lng
 # caculate distance
 @app.endpoint('place.cafe.index')
