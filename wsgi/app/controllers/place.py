@@ -46,7 +46,9 @@ def search():
                 scale = 20
                 Places.coords = classmethod(lambda s: (s.lat, s.lng))
 
-                places = Places.query.filter(db.or_(calc_distance(Places.coords(), (coordinates[0], coordinates[1])) < scale))
+                # places = Places.query.filter(db.or_(calc_distance(Places.coords(), (coordinates[0], coordinates[1])) < scale))
+                # places = places.filter(db.or_(Places.id.in_(query_place), Places.id.in_(query_event_place))).order_by(calc_distance(Places.coords(), (coordinates[0], coordinates[1]))).all()
+                places = db.session.query(Places, UserStarPlace).outerjoin(UserStarPlace, Places.id == UserStarPlace.place_id).filter(db.or_(calc_distance(Places.coords(), (coordinates[0], coordinates[1])) < scale))
                 places = places.filter(db.or_(Places.id.in_(query_place), Places.id.in_(query_event_place))).order_by(calc_distance(Places.coords(), (coordinates[0], coordinates[1]))).all()
 
         return render_template('place/search.html', places=places)
@@ -188,9 +190,11 @@ def cafe_index():
 
             mrt = Places.query.filter(Places.id == request.form['station']).one()
 
-            places = Places.query.filter(db.or_(calc_distance(Places.coords(), (mrt.lat, mrt.lng)) < scale, Places.mrt == request.form['station']), Places.poi_type == poi_type.id).order_by(calc_distance(Places.coords(), (mrt.lat, mrt.lng))).all()
+            # places = Places.query.filter(db.or_(calc_distance(Places.coords(), (mrt.lat, mrt.lng)) < scale, Places.mrt == request.form['station']), Places.poi_type == poi_type.id).order_by(calc_distance(Places.coords(), (mrt.lat, mrt.lng))).all()
+            places = db.session.query(Places, UserStarPlace).outerjoin(UserStarPlace, Places.id == UserStarPlace.place_id).filter(db.or_(calc_distance(Places.coords(), (mrt.lat, mrt.lng)) < scale, Places.mrt == request.form['station']), Places.poi_type == poi_type.id).order_by(calc_distance(Places.coords(), (mrt.lat, mrt.lng))).all()
         elif 'name' in request.form:  # 關鍵字查詢
-            places = Places.query.filter(db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
+            # places = Places.query.filter(db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
+            places = db.session.query(Places, UserStarPlace).outerjoin(UserStarPlace, Places.id == UserStarPlace.place_id).filter(db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
 
         return render_template('place/cafe_list.html', places=places)
 
@@ -252,9 +256,11 @@ def hackerspace_index():
             elif request.form['location'] == 's':
                 lat, lng = 22.997144,120.21296600000005
 
-            places = Places.query.filter(Places.id.in_(query_place_tag), calc_distance(Places.coords(), (lat, lng)) < scale).order_by(calc_distance(Places.coords(), (lat, lng))).all()
+            # places = Places.query.filter(Places.id.in_(query_place_tag), calc_distance(Places.coords(), (lat, lng)) < scale).order_by(calc_distance(Places.coords(), (lat, lng))).all()
+            places = db.session.query(Places, UserStarPlace).outerjoin(UserStarPlace, Places.id == UserStarPlace.place_id).filter(Places.id.in_(query_place_tag), calc_distance(Places.coords(), (lat, lng)) < scale).order_by(calc_distance(Places.coords(), (lat, lng))).all()
         elif 'name' in request.form:  # 關鍵字查詢
-            places = Places.query.filter(Places.id.in_(query_place_tag), db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
+            # places = Places.query.filter(Places.id.in_(query_place_tag), db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
+            places = db.session.query(Places, UserStarPlace).outerjoin(UserStarPlace, Places.id == UserStarPlace.place_id).filter(Places.id.in_(query_place_tag), db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
 
         return render_template('place/hackerspace_list.html', places=places)
 
@@ -308,9 +314,11 @@ def coworking_space_index():
             elif request.form['location'] == 's':
                 lat, lng = 22.997144,120.21296600000005
 
-            places = Places.query.filter(Places.id.in_(query_place_tag), calc_distance(Places.coords(), (lat, lng)) < scale).order_by(calc_distance(Places.coords(), (lat, lng))).all()
+            # places = Places.query.filter(Places.id.in_(query_place_tag), calc_distance(Places.coords(), (lat, lng)) < scale).order_by(calc_distance(Places.coords(), (lat, lng))).all()
+            places = db.session.query(Places, UserStarPlace).outerjoin(UserStarPlace, Places.id == UserStarPlace.place_id).filter(Places.id.in_(query_place_tag), calc_distance(Places.coords(), (lat, lng)) < scale).order_by(calc_distance(Places.coords(), (lat, lng))).all()
         elif 'name' in request.form:  # 關鍵字查詢
-            places = Places.query.filter(Places.id.in_(query_place_tag), db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
+            # places = Places.query.filter(Places.id.in_(query_place_tag), db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
+            places = db.session.query(Places, UserStarPlace).outerjoin(UserStarPlace, Places.id == UserStarPlace.place_id).filter(Places.id.in_(query_place_tag), db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
 
         return render_template('place/coworking_space_list.html', places=places)
 

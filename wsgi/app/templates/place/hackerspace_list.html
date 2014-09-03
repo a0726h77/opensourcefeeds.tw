@@ -17,6 +17,7 @@ table, td, th {
 {% block body_content %}
     <table>
     <tr>
+        <th></th>
         <th>名稱</th>
         <th>地址</th>
         <th>電話</th>
@@ -24,10 +25,11 @@ table, td, th {
     </tr>
     {% for place in places %}
     <tr>
-        <td><a href="{{ url_for('place.page', place_id=place.id) }}"}>{{ place.name }}</a></td>
-        <td>{% if place.address %}{{ place.address }}{% endif %}</td>
-        <td style="text-align: center;">{% if place.phone %}{{ place.phone }}{% endif %}</td>
-        <td style="text-align: center;">{% if place.url %}<a href="{{ place.url }}" target="_blank">Link</a>{% endif %}</td>
+        <td>{% if 'UserStarPlace' in place.keys() and place.UserStarPlace.place_id %}<span class="glyphicon glyphicon-star"></span>{% endif %}</td>
+        <td><a href="{{ url_for('place.page', place_id=place.Places.id) }}"}>{{ place.Places.name }}</a></td>
+        <td>{% if place.Places.address %}{{ place.Places.address }}{% endif %}</td>
+        <td style="text-align: center;">{% if place.Places.phone %}{{ place.Places.phone }}{% endif %}</td>
+        <td style="text-align: center;">{% if place.Places.url %}<a href="{{ place.Places.url }}" target="_blank">Link</a>{% endif %}</td>
     </tr>
     {% endfor %}
     </table>
