@@ -104,8 +104,8 @@ def edit(place_id):
         data['wireless'] = 1 if 'wireless' in data else 0
         data['electrical_plug'] = 1 if 'electrical_plug' in data else 0
 
-        place_tag = None
-        if 'place_tag' in request.form:
+        place_tag = []
+        if 'place_tag' in data:
             place_tag = [int(place_tag) for place_tag in request.form.getlist("place_tag")]
             del data['place_tag']
 
@@ -113,21 +113,20 @@ def edit(place_id):
         db.session.commit()
 
         ## 新增/刪除 place tag ##
-        if place_tag:
-            place_has_tag = PlaceTag.query.filter(PlaceTag.place_id == place_id).all()
-            place_has_tag = [tag.tag_id for tag in place_has_tag]
+        place_has_tag = PlaceTag.query.filter(PlaceTag.place_id == place_id).all()
+        place_has_tag = [tag.tag_id for tag in place_has_tag]
 
-            # 新增加的
-            added = set(place_tag) - set(place_has_tag)
-            for tag_id in added:
-                db.session.execute(PlaceTag.__table__.insert({'place_id': place_id, 'tag_id': tag_id}))
+        # 新增加的
+        added = set(place_tag) - set(place_has_tag)
+        for tag_id in added:
+            db.session.execute(PlaceTag.__table__.insert({'place_id': place_id, 'tag_id': tag_id}))
 
-            # 刪除的
-            removed = set(place_has_tag) - set(place_tag)
-            for tag_id in removed:
-                PlaceTag.query.filter(PlaceTag.place_id == place_id, PlaceTag.tag_id == tag_id).delete()
+        # 刪除的
+        removed = set(place_has_tag) - set(place_tag)
+        for tag_id in removed:
+            PlaceTag.query.filter(PlaceTag.place_id == place_id, PlaceTag.tag_id == tag_id).delete()
 
-            db.session.commit()
+        db.session.commit()
         ## 新增/刪除 place tag ##
 
         return redirect(url_for('place.page', place_id=place_id))
