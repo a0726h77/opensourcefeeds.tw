@@ -14,8 +14,8 @@
                     <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-581"><a href="#page-styles">社群列表</a>
                         <div class="sub-menu">
                         <ul>
-                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-109"><a href="http://www.mindmeister.com/303031964">MindMap</a></li>
-                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-76"><a href="{{ url_for('group.all_html') }}">html</a></li>
+                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-76"><a href="{{ url_for('group.all_html') }}">純文字</a></li>
+                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-109"><a href="http://www.mindmeister.com/303031964">心智圖</a></li>
                             <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-76"><a href="{{ url_for('group.add') }}">新增</a></li>
                         </ul>
                         </div>
@@ -25,7 +25,7 @@
                         <ul>
                             <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-109"><a href="{{ url_for('event.index') }}">純文字</a></li>
                             <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-109"><a href="{{ url_for('event.calendar') }}">行事曆</a></li>
-                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-109"><a href="{{ url_for('event.rss') }}">所有社群 (RSS)</a></li>
+                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-109"><a href="{{ url_for('event.rss') }}">RSS</a></li>
                             {% if 'user_id' in session %}
                             <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-109"><a href="{{ url_for('event.star_group_rss', user_id=session['user_id']) }}">我關注的 (RSS)</a></li>
                             {% endif %}
