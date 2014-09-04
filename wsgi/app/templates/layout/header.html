@@ -23,6 +23,7 @@
                     <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-581"><a href="#page-styles">近期活動</a>
                         <div class="sub-menu">
                         <ul>
+                            <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-109"><a href="{{ url_for('event.calendar') }}">行事曆</a></li>
                             <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-109"><a href="{{ url_for('event.rss') }}">所有社群 (RSS)</a></li>
                             {% if 'user_id' in session %}
                             <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-109"><a href="{{ url_for('event.star_group_rss', user_id=session['user_id']) }}">我關注的 (RSS)</a></li>

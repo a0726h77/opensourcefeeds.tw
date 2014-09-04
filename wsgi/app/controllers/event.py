@@ -2,14 +2,35 @@
 
 from app import app
 from flask import Flask, request, session, url_for, redirect, \
-     render_template, abort, g, flash, _app_ctx_stack
+     render_template, abort, g, flash, _app_ctx_stack, Response
 from werkzeug.contrib.atom import AtomFeed
 import datetime
+import json
 
 from app.models.models import db
 from app.models.groups import Groups
 from app.models.events import Events
 from app.models.user_star_group import UserStarGroup
+
+
+@app.endpoint('event.json')
+def recent_event_json():
+    events = db.session.query(Groups, Events).filter(Groups.id == Events.group_id, Events.start_datetime > datetime.datetime.now()).order_by(Events.start_datetime).all()
+
+    results = []
+    for event in events:
+        _ = {}
+        _['title'] = event.Events.name
+        _['url'] = event.Events.url
+
+        if event.Events.start_datetime:
+            _['start'] = event.Events.start_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+        if event.Events.end_datetime:
+            _['end'] = event.Events.end_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+
+        results.append(_)
+
+    return Response(json.dumps(results), mimetype='application/json')
 
 
 @app.endpoint('event.rss')
@@ -39,3 +60,8 @@ def start_group_rss(user_id):
                  url=article.Events.url,
                  updated=article.Events.start_datetime - datetime.timedelta(hours=8))
     return feed.get_response()
+
+
+@app.endpoint('event.calendar')
+def calendar():
+    return render_template('event/calendar.html')

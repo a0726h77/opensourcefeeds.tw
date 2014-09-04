@@ -1,0 +1,41 @@
+{% extends "layout/layout.html" %}
+
+{% block head_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-calendar/css/calendar.min.css') }}">
+
+<link href='{{ url_for('static', filename='fullcalendar-2.1.1/fullcalendar.css') }}' rel='stylesheet' />
+<link href='{{ url_for('static', filename='fullcalendar-2.1.1/fullcalendar.print.css') }} rel='stylesheet' media='print' />
+{% endblock %}
+
+{% block head_js %}
+<script src='{{ url_for('static', filename='fullcalendar-2.1.1/lib/moment.min.js') }}'></script>
+<script src='{{ url_for('static', filename='fullcalendar-2.1.1/fullcalendar.min.js') }}'></script>
+{% endblock %}
+
+{% block body_content %}
+<div id="calendar">
+{% endblock %}
+
+{% block body_js %}
+<script>
+	$(document).ready(function() {
+		$('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,basicWeek,basicDay'
+            },
+			defaultDate: Date(),
+            events: {
+                url: '{{ url_for('event.json') }}',
+            },
+            eventClick: function(event) {
+                if (event.url) {
+                    window.open(event.url);
+                    return false;
+                }
+            }
+        });
+	});
+</script>
+{% endblock %}
