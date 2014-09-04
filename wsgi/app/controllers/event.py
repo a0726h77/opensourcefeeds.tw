@@ -13,6 +13,13 @@ from app.models.events import Events
 from app.models.user_star_group import UserStarGroup
 
 
+@app.endpoint('event.index')
+def index():
+    recent_events = db.session.query(Groups, Events).filter(Groups.id == Events.group_id, Events.start_datetime > datetime.datetime.now()).order_by(Events.start_datetime).all()
+
+    return render_template('event/index.html', recent_events=recent_events)
+
+
 @app.endpoint('event.json')
 def recent_event_json():
     events = db.session.query(Groups, Events).filter(Groups.id == Events.group_id, Events.start_datetime > datetime.datetime.now()).order_by(Events.start_datetime).all()

@@ -1,0 +1,24 @@
+{% extends "layout/layout.html" %}
+
+{% block head_css %}
+{% endblock %}
+
+{% block head_js %}
+{% endblock %}
+
+{% block body_content %}
+    <h2>近期活動</h2>
+    <table>
+    {% for event in recent_events %}
+    <tr>
+        <td>{% if star_groups and event.Groups.id in star_groups %}<span class="glyphicon glyphicon-star">{% endif %}</td>
+        <td width="10%">{{ event.Events.start_datetime.strftime("%m/%d") }}</td>
+        <td><a href="{{ url_for('group.page', group_id=event.Groups.id) }}">{{ event.Groups.name }}</a></td>
+        <td><a href="{{ event.Events.url }}" target="_blank">{{ event.Events.name }}</a></td>
+    </tr>
+    {% endfor %}
+    </table>
+{% endblock %}
+
+{% block body_js %}
+{% endblock %}

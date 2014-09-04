@@ -11,6 +11,7 @@ urlpatterns = {
     Rule('/group/html', endpoint='group.all_html'),
     Rule('/group/<group_id>/star', endpoint='group.star'),
     Rule('/group/<group_id>/unstar', endpoint='group.unstar'),
+    Rule('/event', endpoint='event.index'),
     Rule('/event/json', endpoint='event.json'),
     Rule('/event/rss', endpoint='event.rss'),
     Rule('/event/calendar', endpoint='event.calendar'),
