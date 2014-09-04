@@ -29,7 +29,7 @@ def index():
     stations = Places.query.filter(Places.poi_type == poi_type.id).order_by(Places.name).all()
     ## mrt station list ##
 
-    return render_template('index.html', recent_events=recent_events, star_groups=star_groups, stations=stations)
+    return render_template('index.html', star_groups=star_groups, stations=stations)
     # return redirect(url_for('group.all_html'))
 
 
