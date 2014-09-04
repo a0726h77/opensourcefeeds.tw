@@ -75,10 +75,25 @@ def add():
         data['wireless'] = 1 if 'wireless' in data else 0
         data['electrical_plug'] = 1 if 'electrical_plug' in data else 0
 
+        place_tag = []
+        if 'place_tag' in data:
+            place_tag = [int(place_tag) for place_tag in request.form.getlist("place_tag")]
+            del data['place_tag']
+
         place = db.session.execute(Places.__table__.insert(data))
         db.session.commit()
 
-        return redirect(url_for('index'))
+        ## 新增 place tag ##
+        for tag_id in place_tag:
+            db.session.execute(PlaceTag.__table__.insert({'place_id': place.lastrowid, 'tag_id': tag_id}))
+
+        db.session.commit()
+        ## 新增/刪除 place tag ##
+
+        if place:
+            return redirect(url_for('place.page', place_id=place.lastrowid))
+        else:
+            return redirect(url_for('index'))
     else:
         ## mrt station list ##
         poi_type = POITypes.query.filter(POITypes.name == 'Station').one()
@@ -86,7 +101,11 @@ def add():
         stations = Places.query.filter(Places.poi_type == poi_type.id).order_by(Places.name).all()
         ## mrt station list ##
 
-        return render_template('place/add.html', stations=stations)
+        ## place tags ##
+        place_tags = PlaceTags.query.all()
+        ## place tags ##
+
+        return render_template('place/add.html', stations=stations, place_tags=place_tags)
 
 
 # TODO
