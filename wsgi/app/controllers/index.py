@@ -16,8 +16,6 @@ from app.models.poi_types import POITypes
 
 @app.endpoint('index')
 def index():
-    recent_events = db.session.query(Groups, Events).filter(Groups.id == Events.group_id, Events.start_datetime > datetime.datetime.now()).order_by(Events.start_datetime).all()
-
     ## user start groups ##
     star_groups = None
     if 'user_id' in session:
