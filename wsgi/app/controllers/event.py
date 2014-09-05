@@ -17,7 +17,12 @@ from app.models.user_star_group import UserStarGroup
 def index():
     recent_events = db.session.query(Groups, Events).filter(Groups.id == Events.group_id, Events.start_datetime > datetime.datetime.now()).order_by(Events.start_datetime).all()
 
-    return render_template('event/index.html', recent_events=recent_events)
+    star_groups = None
+    if 'user_id' in session:
+        star_groups = UserStarGroup.query.filter(UserStarGroup.user_id == session['user_id']).all()
+        star_groups = [group.group_id for group in star_groups]
+
+    return render_template('event/index.html', recent_events=recent_events, star_groups=star_groups)
 
 
 @app.endpoint('event.json')
