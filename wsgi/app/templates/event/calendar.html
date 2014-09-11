@@ -26,6 +26,11 @@
                 right: 'month,basicWeek,basicDay'
             },
 			defaultDate: Date(),
+            {% if 'view' in request.args and request.args.get('view') == 'day' %}
+            defaultView: 'basicDay',
+            {% elif 'view' in request.args and request.args.get('view') == 'week' %}
+            defaultView: 'basicWeek',
+            {% endif %}
             events: {
                 url: '{{ url_for('event.json') }}',
             },
