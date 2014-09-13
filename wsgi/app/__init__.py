@@ -39,7 +39,11 @@ import os
 from os.path import expanduser
 
 ## web config ##
-app.config.from_pyfile(expanduser("~") + '/.opensourcefeeds_web.cfg')
+if 'OPENSHIFT_DATA_DIR' in os.environ:
+    config_file = os.environ['OPENSHIFT_DATA_DIR'] + '/.opensourcefeeds_web.cfg'
+else:
+    config_file = expanduser("~") + '/.opensourcefeeds_web.cfg'
+app.config.from_pyfile(config_file)
 ## web config ##
 
 ## Remote database config
