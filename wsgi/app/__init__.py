@@ -35,10 +35,15 @@ app.permanent_session_lifetime = timedelta(seconds=60*60*10)  # session expire t
 
 
 #### initial database ####
-## Remote database config
-import ConfigParser
 import os
 from os.path import expanduser
+
+## web config ##
+app.config.from_pyfile(expanduser("~") + '/.opensourcefeeds_web.cfg')
+## web config ##
+
+## Remote database config
+import ConfigParser
 if 'OPENSHIFT_DATA_DIR' in os.environ:
     config_file = os.environ['OPENSHIFT_DATA_DIR'] + '/.opensourcefeeds.cfg'
 else:
