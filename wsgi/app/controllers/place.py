@@ -202,14 +202,14 @@ def page(place_id):
 def cafe_index():
     poi_type = POITypes.query.filter(POITypes.name == 'Cafe').one()
 
-    if request.method == 'POST':
-        places = None
+    places = []
 
+    scale = 0.57
+    Places.coords = classmethod(lambda s: (s.lat, s.lng))
+
+    if request.method == 'POST':
         if 'station' in request.form and request.form['station']:  # 臨近捷運站
             # places = Places.query.filter(Places.mrt == request.form['station'], Places.poi_type == poi_type.id).all()
-
-            scale = 0.57
-            Places.coords = classmethod(lambda s: (s.lat, s.lng))
 
             mrt = Places.query.filter(Places.id == request.form['station']).one()
 
@@ -224,8 +224,18 @@ def cafe_index():
                 places = db.session.query(Places, POITypes).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
 
         return render_template('place/cafe_list.html', places=places)
+    else:
+        if 'lat' in request.args and 'lng' in request.args:
+            lat = request.args['lat']
+            lng = request.args['lng']
+            print lat
+            print lng
+            if 'user_id' in session:
+                places = db.session.query(Places, UserStarPlace, POITypes).outerjoin(UserStarPlace, Places.id == UserStarPlace.place_id).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(db.or_(calc_distance(Places.coords(), (lat, lng)) < scale), Places.poi_type == poi_type.id).order_by(calc_distance(Places.coords(), (lat, lng))).all()
+            else:
+                places = db.session.query(Places, POITypes).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(db.or_(calc_distance(Places.coords(), (lat, lng)) < scale), Places.poi_type == poi_type.id).order_by(calc_distance(Places.coords(), (lat, lng))).all()
 
-    return ''
+        return render_template('place/cafe_list.html', places=places)
 
 
 # TODO
