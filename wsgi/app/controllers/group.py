@@ -17,6 +17,7 @@ from app.models.group_websites import GroupWebsites
 from app.models.events import Events
 from app.models.group_facebook_id import GroupFacebookID
 from app.models.user_star_group import UserStarGroup
+from app.models.search_cache import SearchCache
 
 
 @app.endpoint('group.page')
@@ -178,6 +179,14 @@ def all_html():
             groups = groups.filter(db.or_(Groups.name.like('%%%s%%' % request.form['search']), Groups.alias_name.like('%%%s%%' % request.form['search']), Groups.short_name.like('%%%s%%' % request.form['search'])))
 
         groups = groups.order_by(Groups.type, Groups.name).all()
+
+    # save user search #
+    if request.method == 'POST' and request.form['search']:
+        search_cache = SearchCache.query.filter(SearchCache.text == request.form['search']).all()
+        if not search_cache:
+            db.session.execute(SearchCache.__table__.insert({'text': request.form['search']}))
+            db.session.commit()
+    # save user search #
 
     return render_template('group/list.html', groups=groups)
 
