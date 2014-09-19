@@ -45,6 +45,18 @@
     </script>
     <!-- WEB ROOT URL -->
 
+    <!-- HTML5 Geolocation -->
+    <script>
+    function getLocation(callback) {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(callback);
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+    </script>
+    <!-- HTML5 Geolocation -->
+
     {% block head_js %}{% endblock %}
 </head>
 <body class="home blog custom-background" data-tablet-width="900">

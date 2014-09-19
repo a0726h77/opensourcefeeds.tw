@@ -41,7 +41,7 @@
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
               <button type="submit" class="btn btn-default">尋找</button>
-              <button type="button" class="btn btn-primary" onclick="getLocation();">我的附近</button>
+              <button type="button" class="btn btn-primary" onclick="getLocation(showPosition);">我的附近</button>
             </div>
           </div>
         </form>
@@ -154,14 +154,6 @@
 </script>
 
 <script>
-function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-        x.innerHTML = "Geolocation is not supported by this browser.";
-    }
-}
-
 function showPosition(position) {
     // alert(position.coords.latitude);
     // alert(position.coords.longitude);
