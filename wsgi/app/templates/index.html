@@ -159,7 +159,7 @@ function showPosition(position) {
     // alert(position.coords.longitude);
     lat = position.coords.latitude;
     lng = position.coords.longitude;
-    location.replace('{{ url_for('place.cafe.index') }}?lat=' + lat + '&lon=' + lng);
+    location.replace('{{ url_for('place.cafe.index') }}?lat=' + lat + '&lng=' + lng);
 }
 </script>
 {% endblock %}
