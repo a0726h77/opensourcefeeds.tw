@@ -50,6 +50,14 @@
                 </div>
             </div>
             <div class="form-group">
+                <label for="inputLatLng" class="col-sm-2 control-label">坐標</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputLat" name="lat">
+                    <input type="text" class="form-control" id="inputLng" name="lng">
+                    <button type="button" class="btn btn-primary" onclick="getLocation(showPosition);">取得我的坐標</button>
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="inputPhone" class="col-sm-2 control-label">電話</label>
                 <div class="col-sm-10">
                     <input type="text" class="form-control" id="inputPhone" name="phone">
@@ -91,4 +99,10 @@
 {% endblock %}
 
 {% block body_js %}
+<script>
+function showPosition(position) {
+    $('#inputLat').val(position.coords.latitude);
+    $('#inputLng').val(position.coords.longitude);
+}
+</script>
 {% endblock %}
