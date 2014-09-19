@@ -5,6 +5,7 @@ from flask import Flask, request, session, url_for, redirect, \
      render_template, abort, g, flash, _app_ctx_stack, Response
 from werkzeug.contrib.atom import AtomFeed
 import datetime
+from datetime import date
 import json
 
 from app.models.models import db
@@ -27,7 +28,8 @@ def index():
 
 @app.endpoint('event.json')
 def recent_event_json():
-    events = db.session.query(Groups, Events).filter(Groups.id == Events.group_id, Events.start_datetime > datetime.datetime.now()).order_by(Events.start_datetime).all()
+    year_first_day = date(date.today().year, 1, 1)
+    events = db.session.query(Groups, Events).filter(Groups.id == Events.group_id, Events.start_datetime > year_first_day).order_by(Events.start_datetime).all()
 
     results = []
     for event in events:
