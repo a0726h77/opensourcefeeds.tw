@@ -23,6 +23,7 @@ table, td, th {
         <th>電話</th>
         <th>無線網路</th>
         <th>插座</th>
+        <th>營業時間</th>
         <th>店家網址</th>
     </tr>
     {% for place in places %}
@@ -33,6 +34,7 @@ table, td, th {
         <td style="text-align: center;">{% if place.Places.phone %}{{ place.Places.phone }}{% endif %}</td>
         <td style="text-align: center;">{% if place.Places.wireless %}v{% endif %}</td>
         <td style="text-align: center;">{% if place.Places.electrical_plug %}v{% endif %}</td>
+        <td style="text-align: center;">{% if place.PlaceBusinessHours.from_time %}{{ place.PlaceBusinessHours.from_time.strftime("%H:%M") }} ~ {{ place.PlaceBusinessHours.till_time.strftime("%H:%M") }}{% endif %}</td>
         <td style="text-align: center;">{% if place.Places.url %}<a href="{{ place.Places.url }}" target="_blank">Link</a>{% endif %}</td>
     </tr>
     {% endfor %}
