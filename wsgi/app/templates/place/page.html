@@ -71,9 +71,25 @@
             <ul>
                 {% for business_hour in business_hours %}
                     {% if business_hour.weekday == weekday %}
-                    <li><b>{{ business_hour.weekday }} : {{ business_hour.from_time.strftime("%H:%M") }} ~ {{ business_hour.till_time.strftime("%H:%M") }}</b></li>
+                    <li>
+                        <b>
+                            {{ business_hour.weekday }} :
+                            {% if business_hour.from_time %}
+                            {{ business_hour.from_time.strftime("%H:%M") }} ~ {{ business_hour.till_time.strftime("%H:%M") }}
+                            {% else %}
+                            --
+                            {% endif %}
+                        </b>
+                    </li>
                     {% else %}
-                    <li>{{ business_hour.weekday }} : {{ business_hour.from_time.strftime("%H:%M") }} ~ {{ business_hour.till_time.strftime("%H:%M") }}</li>
+                    <li>
+                        {{ business_hour.weekday }} :
+                        {% if business_hour.from_time %}
+                        {{ business_hour.from_time.strftime("%H:%M") }} ~ {{ business_hour.till_time.strftime("%H:%M") }}
+                        {% else %}
+                        --
+                        {% endif %}
+                    </li>
                     {% endif %}
                 {% endfor %}
             </ul>
