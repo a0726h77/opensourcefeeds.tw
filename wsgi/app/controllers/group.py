@@ -163,7 +163,7 @@ def edit(group_id):
 def all_html():
     if 'user_id' in session:
         # 使用者關注的社群排在前面
-        groups = db.session.query(Groups, GroupTypes, UserStarGroup).outerjoin(UserStarGroup, Groups.id == UserStarGroup.group_id).filter(Groups.type == GroupTypes.id)
+        groups = db.session.query(Groups, GroupTypes, UserStarGroup).outerjoin(UserStarGroup, db.and_(Groups.id == UserStarGroup.group_id, UserStarGroup.user_id == session['user_id'])).filter(Groups.type == GroupTypes.id)
 
         # TODO
         # search location
