@@ -50,7 +50,7 @@ def search():
                 Places.coords = classmethod(lambda s: (s.lat, s.lng))
 
                 if 'user_id' in session:
-                    places = db.session.query(Places, UserStarPlace, POITypes).outerjoin(UserStarPlace, Places.id == UserStarPlace.place_id).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(db.or_(calc_distance(Places.coords(), (coordinates[0], coordinates[1])) < scale))
+                    places = db.session.query(Places, UserStarPlace, POITypes).outerjoin(UserStarPlace, db.and_(Places.id == UserStarPlace.place_id, UserStarPlace.user_id == session['user_id'])).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(db.or_(calc_distance(Places.coords(), (coordinates[0], coordinates[1])) < scale))
                     places = places.filter(db.or_(Places.id.in_(query_place), Places.id.in_(query_event_place))).order_by(calc_distance(Places.coords(), (coordinates[0], coordinates[1]))).all()
                 else:
                     places = db.session.query(Places, POITypes).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(db.or_(calc_distance(Places.coords(), (coordinates[0], coordinates[1])) < scale))
@@ -251,12 +251,12 @@ def cafe_index():
             mrt = Places.query.filter(Places.id == request.form['station']).one()
 
             if 'user_id' in session:
-                places = db.session.query(Places, UserStarPlace, POITypes, PlaceBusinessHours).outerjoin(UserStarPlace, Places.id == UserStarPlace.place_id).outerjoin(POITypes, Places.poi_type == POITypes.id).outerjoin(PlaceBusinessHours, db.and_(PlaceBusinessHours.place_id == Places.id, PlaceBusinessHours.weekday == weekday)).filter(db.or_(calc_distance(Places.coords(), (mrt.lat, mrt.lng)) < scale, Places.mrt == request.form['station']), Places.poi_type == poi_type.id).order_by(calc_distance(Places.coords(), (mrt.lat, mrt.lng))).all()
+                places = db.session.query(Places, UserStarPlace, POITypes, PlaceBusinessHours).outerjoin(UserStarPlace, db.and_(Places.id == UserStarPlace.place_id, UserStarPlace.user_id == session['user_id'])).outerjoin(POITypes, Places.poi_type == POITypes.id).outerjoin(PlaceBusinessHours, db.and_(PlaceBusinessHours.place_id == Places.id, PlaceBusinessHours.weekday == weekday)).filter(db.or_(calc_distance(Places.coords(), (mrt.lat, mrt.lng)) < scale, Places.mrt == request.form['station']), Places.poi_type == poi_type.id).order_by(calc_distance(Places.coords(), (mrt.lat, mrt.lng))).all()
             else:
                 places = db.session.query(Places, POITypes, PlaceBusinessHours).outerjoin(POITypes, Places.poi_type == POITypes.id).outerjoin(PlaceBusinessHours, db.and_(PlaceBusinessHours.place_id == Places.id, PlaceBusinessHours.weekday == weekday)).filter(db.or_(calc_distance(Places.coords(), (mrt.lat, mrt.lng)) < scale, Places.mrt == request.form['station']), Places.poi_type == poi_type.id).order_by(calc_distance(Places.coords(), (mrt.lat, mrt.lng))).all()
         elif 'name' in request.form:  # 關鍵字查詢
             if 'user_id' in session:
-                places = db.session.query(Places, UserStarPlace, POITypes, PlaceBusinessHours).outerjoin(UserStarPlace, Places.id == UserStarPlace.place_id).outerjoin(POITypes, Places.poi_type == POITypes.id).outerjoin(PlaceBusinessHours, db.and_(PlaceBusinessHours.place_id == Places.id, PlaceBusinessHours.weekday == weekday)).filter(db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
+                places = db.session.query(Places, UserStarPlace, POITypes, PlaceBusinessHours).outerjoin(UserStarPlace, db.and_(Places.id == UserStarPlace.place_id, UserStarPlace.user_id == session['user_id'])).outerjoin(POITypes, Places.poi_type == POITypes.id).outerjoin(PlaceBusinessHours, db.and_(PlaceBusinessHours.place_id == Places.id, PlaceBusinessHours.weekday == weekday)).filter(db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
             else:
                 places = db.session.query(Places, POITypes, PlaceBusinessHours).outerjoin(POITypes, Places.poi_type == POITypes.id).outerjoin(PlaceBusinessHours, db.and_(PlaceBusinessHours.place_id == Places.id, PlaceBusinessHours.weekday == weekday)).filter(db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
 
@@ -268,7 +268,7 @@ def cafe_index():
             print lat
             print lng
             if 'user_id' in session:
-                places = db.session.query(Places, UserStarPlace, POITypes).outerjoin(UserStarPlace, Places.id == UserStarPlace.place_id).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(db.or_(calc_distance(Places.coords(), (lat, lng)) < scale), Places.poi_type == poi_type.id).order_by(calc_distance(Places.coords(), (lat, lng))).all()
+                places = db.session.query(Places, UserStarPlace, POITypes).outerjoin(UserStarPlace, db.and_(Places.id == UserStarPlace.place_id, UserStarPlace.user_id == session['user_id'])).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(db.or_(calc_distance(Places.coords(), (lat, lng)) < scale), Places.poi_type == poi_type.id).order_by(calc_distance(Places.coords(), (lat, lng))).all()
             else:
                 places = db.session.query(Places, POITypes).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(db.or_(calc_distance(Places.coords(), (lat, lng)) < scale), Places.poi_type == poi_type.id).order_by(calc_distance(Places.coords(), (lat, lng))).all()
 
@@ -331,12 +331,12 @@ def hackerspace_index():
                 lat, lng = 22.997144,120.21296600000005
 
             if 'user_id' in session:
-                places = db.session.query(Places, UserStarPlace, POITypes).outerjoin(UserStarPlace, Places.id == UserStarPlace.place_id).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(Places.id.in_(query_place_tag), calc_distance(Places.coords(), (lat, lng)) < scale).order_by(calc_distance(Places.coords(), (lat, lng))).all()
+                places = db.session.query(Places, UserStarPlace, POITypes).outerjoin(UserStarPlace, db.and_(Places.id == UserStarPlace.place_id, UserStarPlace.user_id == session['user_id'])).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(Places.id.in_(query_place_tag), calc_distance(Places.coords(), (lat, lng)) < scale).order_by(calc_distance(Places.coords(), (lat, lng))).all()
             else:
                 places = db.session.query(Places, POITypes).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(Places.id.in_(query_place_tag), calc_distance(Places.coords(), (lat, lng)) < scale).order_by(calc_distance(Places.coords(), (lat, lng))).all()
         elif 'name' in request.form:  # 關鍵字查詢
             if 'user_id' in session:
-                places = db.session.query(Places, UserStarPlace, POITypes).outerjoin(UserStarPlace, Places.id == UserStarPlace.place_id).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(Places.id.in_(query_place_tag), db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
+                places = db.session.query(Places, UserStarPlace, POITypes).outerjoin(UserStarPlace, db.and_(Places.id == UserStarPlace.place_id, UserStarPlace.user_id == session['user_id'])).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(Places.id.in_(query_place_tag), db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
             else:
                 places = db.session.query(Places, POITypes).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(Places.id.in_(query_place_tag), db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
 
@@ -393,12 +393,12 @@ def coworking_space_index():
                 lat, lng = 22.997144,120.21296600000005
 
             if 'user_id' in session:
-                places = db.session.query(Places, UserStarPlace, POITypes).outerjoin(UserStarPlace, Places.id == UserStarPlace.place_id).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(Places.id.in_(query_place_tag), calc_distance(Places.coords(), (lat, lng)) < scale).order_by(calc_distance(Places.coords(), (lat, lng))).all()
+                places = db.session.query(Places, UserStarPlace, POITypes).outerjoin(UserStarPlace, db.and_(Places.id == UserStarPlace.place_id, UserStarPlace.user_id == session['user_id'])).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(Places.id.in_(query_place_tag), calc_distance(Places.coords(), (lat, lng)) < scale).order_by(calc_distance(Places.coords(), (lat, lng))).all()
             else:
                 places = db.session.query(Places, POITypes).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(Places.id.in_(query_place_tag), calc_distance(Places.coords(), (lat, lng)) < scale).order_by(calc_distance(Places.coords(), (lat, lng))).all()
         elif 'name' in request.form:  # 關鍵字查詢
             if 'user_id' in session:
-                places = db.session.query(Places, UserStarPlace, POITypes).outerjoin(UserStarPlace, Places.id == UserStarPlace.place_id).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(Places.id.in_(query_place_tag), db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
+                places = db.session.query(Places, UserStarPlace, POITypes).outerjoin(UserStarPlace, db.and_(Places.id == UserStarPlace.place_id, UserStarPlace.user_id == session['user_id'])).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(Places.id.in_(query_place_tag), db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
             else:
                 places = db.session.query(Places, POITypes).outerjoin(POITypes, Places.poi_type == POITypes.id).filter(Places.id.in_(query_place_tag), db.or_(Places.name.like("%%%s%%" % request.form['name']), Places.address.like("%%%s%%" % request.form['name']))).all()
 
