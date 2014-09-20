@@ -1,9 +1,13 @@
 {% extends "layout/layout.html" %}
 
 {% block head_css %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='jquery.businessHours/libs/jquery-timepicker/jquery.timepicker.css') }}"/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='jquery.businessHours/jquery.businessHours.css') }}"/>
 {% endblock %}
 
 {% block head_js %}
+<script type="text/javascript" src="{{ url_for('static', filename='jquery.businessHours/libs/jquery-timepicker/jquery.timepicker.min.js') }}"></script>
+<script src="{{ url_for('static', filename='jquery.businessHours/jquery.businessHours.js') }}"></script>
 {% endblock %}
 
 {% block body_content %}
@@ -105,9 +109,47 @@
         </form>
     </div>
 
-    </div>
+    <h3>營業時間</h3>
+    <div id="businessHoursContainer"></div>
+    <button id="btnSerialize" type="button" class="btn btn-primary">儲存</button>
 </div>
 {% endblock %}
 
 {% block body_js %}
+<script>
+(function() {
+    // 列出營業時間
+    var businessHoursManagerBootstrap = $("#businessHoursContainer").businessHours({
+          operationTime: [{"isActive":true,"timeFrom":"09:00","timeTill":"18:00"},{"isActive":false,"timeFrom":null,"timeTill":null},{"isActive":true,"timeFrom":"9:00","timeTill":"18:00"},{"isActive":true,"timeFrom":"9:00","timeTill":"18:00"},{"isActive":true,"timeFrom":"9:00","timeTill":"18:00"},{"isActive":true,"timeFrom":"9:00","timeTill":"18:00"},{"isActive":true,"timeFrom":"9:00","timeTill":"18:00"}],
+        operationTime: {{ business_hours_json|tojson }},
+        postInit:function(){
+            $("#businessHoursContainer").find('.operationTimeFrom, .operationTimeTill').timepicker({
+                'timeFormat': 'H:i',
+                'step': 15
+            });
+        },
+        dayTmpl: '<div class="dayContainer" style="width: 80px;">' +
+                '<div data-original-title="" class="colorBox"><input type="checkbox" class="invisible operationState"/></div>' +
+                '<div class="weekday"></div>' +
+                '<div class="operationTime input-group"><span class="input-group-addon"><i class="fa fa-sun-o"></i></span><input type="text" name="startTime" class="mini-time form-control operationTimeFrom" value=""/></div>' +
+                '<div class="operationTime input-group"><span class="input-group-addon"><i class="fa fa-moon-o"></i></span><input type="text" name="endTime" class="mini-time form-control operationTimeTill" value=""/></div>' +
+                '</div></div>'
+    });
+
+    // 儲存時間
+    $("#btnSerialize").click(function() {
+        $.ajax({
+            url: $SCRIPT_ROOT + "/api/place/business_hours/{{ place.id }}",
+            type: 'POST',
+            data: {'operation_time': JSON.stringify(businessHoursManagerBootstrap.serialize())},
+            success: function(data) {
+                alert('success');
+            },
+            error: function(data) {
+                alert('failed');
+            }
+        });
+    });
+})();
+</script>
 {% endblock %}

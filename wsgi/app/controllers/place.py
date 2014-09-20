@@ -4,12 +4,14 @@ from app import app
 from flask import Flask, request, session, url_for, redirect, \
      render_template, abort, g, flash, _app_ctx_stack, send_from_directory
 from pygeocoder import Geocoder
+import json
 
 from app.models.models import db
 from app.models.places import Places
 from app.models.poi_types import POITypes
 from app.models.place_tag import PlaceTag
 from app.models.place_tags import PlaceTags
+from app.models.place_business_hours import PlaceBusinessHours
 from app.models.events import Events
 from app.models.user_star_place import UserStarPlace
 
@@ -173,7 +175,25 @@ def edit(place_id):
         poi_types = POITypes.query.all()
         ## poi types ##
 
-        return render_template('place/edit.html', place=place, stations=stations, poi_types=poi_types, place_tags=place_tags, place_has_tag=place_has_tag)
+        ## business hours  ##
+        business_hours = PlaceBusinessHours.query.filter(PlaceBusinessHours.place_id == place_id).order_by(PlaceBusinessHours.weekday).all()
+
+        business_hours_json = []
+        for business_hour in business_hours:
+            _ = {}
+            if business_hour.from_time and business_hour.till_time:
+                _['isActive'] = True
+                _['timeFrom'] = business_hour.from_time.strftime("%H:%M")
+                _['timeTill'] = business_hour.till_time.strftime("%H:%M")
+            else:
+                _['isActive'] = False
+                _['timeFrom'] = None
+                _['timeTill'] = None
+
+            business_hours_json.append(_)
+        ## business hours  ##
+
+        return render_template('place/edit.html', place=place, stations=stations, poi_types=poi_types, place_tags=place_tags, place_has_tag=place_has_tag, business_hours_json=business_hours_json)
 
 
 @app.endpoint('place.page')
@@ -417,6 +437,37 @@ def unstar(place_id):
         return ''
     else:
         abort(500)
+
+
+@app.endpoint('place.business_hours_save')
+def business_hours_save(place_id):
+    if request.method == 'POST':
+        operation_time = json.loads(request.form['operation_time'])
+
+        weekday = 1
+        for time in operation_time:
+            data = {}
+            data['place_id'] = place_id
+            data['weekday'] = weekday
+            if time['isActive']:
+                data['from_time'] = time['timeFrom']
+                data['till_time'] = time['timeTill']
+            else:
+                data['from_time'] = '00:00:00'
+                data['till_time'] = '00:00:00'
+
+            place_business_hour = PlaceBusinessHours.query.filter(PlaceBusinessHours.place_id == place_id, PlaceBusinessHours.weekday == weekday).first()
+
+            if place_business_hour:  # update
+                PlaceBusinessHours.query.filter(PlaceBusinessHours.place_id == place_id, PlaceBusinessHours.weekday == weekday).update(data)
+            else:  # add
+                db.session.execute(PlaceBusinessHours.__table__.insert(data))
+
+            weekday = weekday + 1
+
+        db.session.commit()
+
+        return ''
 
 
 def calc_distance(latlong1, latlong2):

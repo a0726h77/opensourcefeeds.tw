@@ -28,6 +28,7 @@ urlpatterns = {
     Rule('/place/add/coworking_space', endpoint='place.coworking_space.add'),
     Rule('/place/<place_id>/star', endpoint='place.star'),
     Rule('/place/<place_id>/unstar', endpoint='place.unstar'),
+    Rule('/api/place/business_hours/<place_id>', endpoint='place.business_hours_save'),
     Rule('/robots.txt', endpoint='robots.txt'),
     Rule('/google/login', endpoint='login.google'),
     Rule('/google/authorized', endpoint='authorized.google'),
