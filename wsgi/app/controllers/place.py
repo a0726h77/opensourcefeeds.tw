@@ -180,18 +180,26 @@ def edit(place_id):
         business_hours = PlaceBusinessHours.query.filter(PlaceBusinessHours.place_id == place_id).order_by(PlaceBusinessHours.weekday).all()
 
         business_hours_json = []
-        for business_hour in business_hours:
-            _ = {}
-            if business_hour.from_time and business_hour.till_time:
-                _['isActive'] = True
-                _['timeFrom'] = business_hour.from_time.strftime("%H:%M")
-                _['timeTill'] = business_hour.till_time.strftime("%H:%M")
-            else:
+        if business_hours:
+            for business_hour in business_hours:
+                _ = {}
+                if business_hour.from_time and business_hour.till_time:
+                    _['isActive'] = True
+                    _['timeFrom'] = business_hour.from_time.strftime("%H:%M")
+                    _['timeTill'] = business_hour.till_time.strftime("%H:%M")
+                else:
+                    _['isActive'] = False
+                    _['timeFrom'] = None
+                    _['timeTill'] = None
+
+                business_hours_json.append(_)
+        else:
+            for business_hour in range(0, 7):
+                _ = {}
                 _['isActive'] = False
                 _['timeFrom'] = None
                 _['timeTill'] = None
-
-            business_hours_json.append(_)
+                business_hours_json.append(_)
         ## business hours  ##
 
         return render_template('place/edit.html', place=place, stations=stations, poi_types=poi_types, place_tags=place_tags, place_has_tag=place_has_tag, business_hours_json=business_hours_json)
