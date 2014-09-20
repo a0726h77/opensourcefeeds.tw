@@ -5,6 +5,7 @@ from flask import Flask, request, session, url_for, redirect, \
      render_template, abort, g, flash, _app_ctx_stack, send_from_directory
 from pygeocoder import Geocoder
 import json
+import datetime
 
 from app.models.models import db
 from app.models.places import Places
@@ -212,7 +213,13 @@ def page(place_id):
         star = UserStarPlace.query.filter(UserStarPlace.user_id == session['user_id'], UserStarPlace.place_id == place_id).all()
     ## user star place ##
 
-    return render_template('place/page.html', place=place, station=station, star=star)
+    ## business_hours ##
+    business_hours = PlaceBusinessHours.query.filter(PlaceBusinessHours.place_id == place_id).order_by(PlaceBusinessHours.weekday).all()
+
+    weekday = datetime.datetime.today().weekday() + 1
+    ## business_hours ##
+
+    return render_template('place/page.html', place=place, station=station, star=star, business_hours=business_hours, weekday=weekday)
 
 
 # TODO

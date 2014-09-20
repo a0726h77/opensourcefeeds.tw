@@ -67,7 +67,16 @@
             </ul>
         </div>
         <div class="col-md-4">
-            <!--<h3>菜單</h3>-->
+            <h3>營業時間</h3>
+            <ul>
+                {% for business_hour in business_hours %}
+                    {% if business_hour.weekday == weekday %}
+                    <li><b>{{ business_hour.weekday }} : {{ business_hour.from_time.strftime("%H:%M") }} ~ {{ business_hour.till_time.strftime("%H:%M") }}</b></li>
+                    {% else %}
+                    <li>{{ business_hour.weekday }} : {{ business_hour.from_time.strftime("%H:%M") }} ~ {{ business_hour.till_time.strftime("%H:%M") }}</li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
         </div>
     </div>
 </section>
