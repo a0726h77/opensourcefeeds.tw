@@ -27,20 +27,15 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputName" class="col-sm-2 control-label">* 店名</label>
+                <label for="inputURL" class="col-sm-2 control-label">網址</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputName" name="name" required>
+                    <input type="url" class="form-control" id="inputURL" name="url" placeholder="http://">
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputWireless" class="col-sm-2 control-label">提供功能</label>
+                <label for="inputName" class="col-sm-2 control-label">* 店名</label>
                 <div class="col-sm-10">
-                    <label class="checkbox-inline">
-                      <input type="checkbox" name="wireless" value="1"> 免費無線網路
-                    </label>
-                    <label class="checkbox-inline">
-                      <input type="checkbox" name="electrical_plug" value="1"> 免費電源插座
-                    </label>
+                    <input type="text" class="form-control" id="inputName" name="name" required>
                 </div>
             </div>
             <div class="form-group">
@@ -50,11 +45,26 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputLatLng" class="col-sm-2 control-label">坐標</label>
+                <label for="inputStation" class="col-sm-2 control-label">臨近捷運站</label>
                 <div class="col-sm-10">
+                    <select class="form-control" name="mrt">
+                        <option></option>
+                        {% for station in stations: %}
+                        <option value="{{ station.id }}">{{ station.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputLatLng" class="col-sm-2 control-label">坐標</label>
+                <div class="col-sm-4">
                     <input type="text" class="form-control" id="inputLat" name="lat">
+                </div>
+                <div class="col-sm-4">
                     <input type="text" class="form-control" id="inputLng" name="lng">
-                    <button type="button" class="btn btn-primary" onclick="getLocation(showPosition);">取得我的坐標</button>
+                </div>
+                <div class="col-sm-2">
+                    <button type="button" class="btn btn-primary" onclick="getLocation(showPosition);">取得我目前的位置</button>
                 </div>
             </div>
             <div class="form-group">
@@ -70,20 +80,14 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="inputURL" class="col-sm-2 control-label">網址</label>
+                <label for="inputWireless" class="col-sm-2 control-label">提供功能</label>
                 <div class="col-sm-10">
-                    <input type="url" class="form-control" id="inputURL" name="url" placeholder="http://">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="inputStation" class="col-sm-2 control-label">臨近捷運站</label>
-                <div class="col-sm-10">
-                    <select class="form-control" name="mrt">
-                        <option></option>
-                        {% for station in stations: %}
-                        <option value="{{ station.id }}">{{ station.name }}</option>
-                        {% endfor %}
-                    </select>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" name="wireless" value="1"> 免費無線網路
+                    </label>
+                    <label class="checkbox-inline">
+                      <input type="checkbox" name="electrical_plug" value="1"> 免費電源插座
+                    </label>
                 </div>
             </div>
             <div class="form-group">
