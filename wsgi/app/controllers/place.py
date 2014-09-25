@@ -299,7 +299,7 @@ def cafe_add():
         place = db.session.execute(Places.__table__.insert(data))
         db.session.commit()
 
-        return redirect(url_for('index'))
+        return redirect(url_for('place.page', place_id=place.lastrowid))
     else:
         ## mrt station list ##
         poi_type = POITypes.query.filter(POITypes.name == 'Station').one()
