@@ -120,43 +120,46 @@ def add():
 
 @app.endpoint('group.edit')
 def edit(group_id):
-    support_sites = ['Accupass', 'Blogger', 'Facebook', 'Flickr', 'GitHub', 'Google+', 'Google Groups', 'Hackpad', 'KKTIX', 'Meetup', 'Plurk', 'Twitter', 'Ustream', 'Wikidot', 'YouTube', 'Peatix', 'Trello', 'Tumblr', 'IRC']
-    support_sites.sort()
-    icon_list = list_icon_name()
+    if 'user_id' in session:
+        support_sites = ['Accupass', 'Blogger', 'Facebook', 'Flickr', 'GitHub', 'Google+', 'Google Groups', 'Hackpad', 'KKTIX', 'Meetup', 'Plurk', 'Twitter', 'Ustream', 'Wikidot', 'YouTube', 'Peatix', 'Trello', 'Tumblr', 'IRC']
+        support_sites.sort()
+        icon_list = list_icon_name()
 
-    if request.method == 'POST':
-        if 'url' in request.form:
-            data = dict([[k, v] for k, v in request.form.items()])  # 將 form 轉爲可新增資料的變數
+        if request.method == 'POST':
+            if 'url' in request.form:
+                data = dict([[k, v] for k, v in request.form.items()])  # 將 form 轉爲可新增資料的變數
 
-            data['group_id'] = group_id
+                data['group_id'] = group_id
 
-            if data['name'] not in support_sites:
-                data['name'] = data['custom_name']
+                if data['name'] not in support_sites:
+                    data['name'] = data['custom_name']
 
-            del data['custom_name']
+                del data['custom_name']
 
-            website = db.session.execute(GroupWebsites.__table__.insert(data))
-            db.session.commit()
-        elif 'name' in request.form:
-            rows_changed = Groups.query.filter(Groups.id == group_id).update(request.form)
-            db.session.commit()
+                website = db.session.execute(GroupWebsites.__table__.insert(data))
+                db.session.commit()
+            elif 'name' in request.form:
+                rows_changed = Groups.query.filter(Groups.id == group_id).update(request.form)
+                db.session.commit()
 
-        return redirect(url_for('group.edit', group_id=group_id))
+            return redirect(url_for('group.edit', group_id=group_id))
+        else:
+            group = Groups.query.filter(Groups.id == group_id).one()
+
+            group_types = GroupTypes.query.all()
+
+            group_websites = GroupWebsites.query.filter(GroupWebsites.group_id == group_id).all()
+            group_websites_has_icon = []
+            group_websites_no_icon = []
+            for group_website in group_websites:
+                if group_website.name.lower().replace(' ', '') in icon_list:
+                    group_websites_has_icon.append(group_website)
+                else:
+                    group_websites_no_icon.append(group_website)
+
+            return render_template('group/edit.html', group=group, group_types=group_types, group_websites_has_icon=group_websites_has_icon, group_websites_no_icon=group_websites_no_icon, support_sites=support_sites, icon_list=icon_list)
     else:
-        group = Groups.query.filter(Groups.id == group_id).one()
-
-        group_types = GroupTypes.query.all()
-
-        group_websites = GroupWebsites.query.filter(GroupWebsites.group_id == group_id).all()
-        group_websites_has_icon = []
-        group_websites_no_icon = []
-        for group_website in group_websites:
-            if group_website.name.lower().replace(' ', '') in icon_list:
-                group_websites_has_icon.append(group_website)
-            else:
-                group_websites_no_icon.append(group_website)
-
-        return render_template('group/edit.html', group=group, group_types=group_types, group_websites_has_icon=group_websites_has_icon, group_websites_no_icon=group_websites_no_icon, support_sites=support_sites, icon_list=icon_list)
+        return redirect(url_for('login'))
 
 
 @app.endpoint('group.all_html')
