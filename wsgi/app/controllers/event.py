@@ -29,7 +29,7 @@ def index():
 @app.endpoint('event.json')
 def recent_event_json():
     year_first_day = date(date.today().year, 1, 1)
-    events = db.session.query(Groups, Events).filter(Groups.id == Events.group_id, Events.start_datetime > year_first_day).order_by(Events.start_datetime).all()
+    events = db.session.query(Groups, Events).filter(Groups.id == Events.group_id, Events.start_datetime.between(request.args.get('start'), request.args.get('end'))).order_by(Events.start_datetime).all()
 
     results = []
     for event in events:
