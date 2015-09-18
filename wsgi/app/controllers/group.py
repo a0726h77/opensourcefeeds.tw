@@ -37,7 +37,10 @@ def page(group_id):
     for group_website in group_websites:
         if group_website.name.lower().replace(' ', '') in icon_list:
             if group_website.name == 'IRC' and 'freenode' in group_website.url:
-                group_websites_has_icon.append({'name': 'IRC', 'url': 'http://webchat.freenode.net/?channels=h4'})
+                match = re.search('irc.freenode.net#(.*)', group_website.url)
+                if match:
+                    channel = match.groups()[0]
+                    group_websites_has_icon.append({'name': 'IRC', 'url': 'http://webchat.freenode.net/?channels=%s' % channel})
             else:
                 group_websites_has_icon.append(group_website)
         else:
