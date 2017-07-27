@@ -29,18 +29,19 @@ def index():
 @app.endpoint('event.json')
 def recent_event_json():
     year_first_day = date(date.today().year, 1, 1)
-    events = db.session.query(Groups, Events).filter(Groups.id == Events.group_id, Events.start_datetime.between(request.args.get('start'), request.args.get('end'))).order_by(Events.start_datetime).all()
+    #events = db.session.query(Groups, Events).filter(Groups.id == Events.group_id, Events.start_datetime.between(request.args.get('start'), request.args.get('end'))).order_by(Events.start_datetime).all()
+    events = db.session.query(Events).filter(Events.start_datetime.between(request.args.get('start'), request.args.get('end'))).order_by(Events.start_datetime).all()
 
     results = []
     for event in events:
         _ = {}
-        _['title'] = event.Events.name
-        _['url'] = event.Events.url
+        _['title'] = event.name
+        _['url'] = event.url
 
-        if event.Events.start_datetime:
-            _['start'] = event.Events.start_datetime.strftime("%Y-%m-%dT%H:%M:%S")
-        if event.Events.end_datetime:
-            _['end'] = event.Events.end_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+        if event.start_datetime:
+            _['start'] = event.start_datetime.strftime("%Y-%m-%dT%H:%M:%S")
+        if event.end_datetime:
+            _['end'] = event.end_datetime.strftime("%Y-%m-%dT%H:%M:%S")
 
         results.append(_)
 
